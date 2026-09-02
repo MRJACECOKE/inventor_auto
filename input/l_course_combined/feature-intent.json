@@ -1,0 +1,30 @@
+{
+  "intent_version": "1.0",
+  "part_name": "l_course_combined",
+  "primary_plane": "XY",
+  "notes": "Combined big L + small L walkable volume, layout B. Origin O = big L outer corner. All rectangles corner:origin on XY, extruded +Z by height. S1 raises the small-L-leg2 full block (small_leg_extent wide x small_leg1_top tall); F002 cuts its lower part through-all leaving only the top strip (Y small_leg2_ybase..small_leg1_top) = small L leg 2 (turns +X). F003 adds small L leg 1 (small_width x small_leg1_top). F004 adds big L leg A (big_width x big_lega_extent). F005 adds big L leg B (big_legb_extent x big_width). Result: one solid = the staircase/spiral walkable volume. All extents are clear (no separate thin walls in this combined version).",
+  "parameters": {
+    "big_width":        { "measurement_id": "M001" },
+    "big_lega_extent":  { "measurement_id": "M002" },
+    "big_legb_extent":  { "measurement_id": "M003" },
+    "small_width":      { "measurement_id": "M004" },
+    "small_leg_extent": { "measurement_id": "M005" },
+    "height":           { "measurement_id": "M006" },
+    "small_leg1_top":   { "derivation": { "formula": "M002 + M005", "source_measurement_ids": ["M002", "M005"] }, "unit": "mm" },
+    "small_leg2_ybase": { "derivation": { "formula": "M002 + M005 - M004", "source_measurement_ids": ["M002", "M005", "M004"] }, "unit": "mm" }
+  },
+  "sketches": [
+    { "id": "S1", "plane": "XY", "profile": { "type": "rectangle", "width_param": "small_leg_extent", "height_param": "small_leg1_top",   "corner": "origin" } },
+    { "id": "S2", "plane": "XY", "profile": { "type": "rectangle", "width_param": "small_leg_extent", "height_param": "small_leg2_ybase", "corner": "origin" } },
+    { "id": "S3", "plane": "XY", "profile": { "type": "rectangle", "width_param": "small_width",      "height_param": "small_leg1_top",   "corner": "origin" } },
+    { "id": "S4", "plane": "XY", "profile": { "type": "rectangle", "width_param": "big_width",        "height_param": "big_lega_extent",  "corner": "origin" } },
+    { "id": "S5", "plane": "XY", "profile": { "type": "rectangle", "width_param": "big_legb_extent",  "height_param": "big_width",        "corner": "origin" } }
+  ],
+  "features": [
+    { "id": "F001", "type": "base_extrude", "sketch": "S1", "distance_param": "height", "direction": "positive", "depends_on": [] },
+    { "id": "F002", "type": "extrude_cut",  "sketch": "S2", "depth": "through",         "direction": "positive", "depends_on": ["F001"] },
+    { "id": "F003", "type": "extrude_add",  "sketch": "S3", "distance_param": "height", "direction": "positive", "depends_on": ["F002"] },
+    { "id": "F004", "type": "extrude_add",  "sketch": "S4", "distance_param": "height", "direction": "positive", "depends_on": ["F003"] },
+    { "id": "F005", "type": "extrude_add",  "sketch": "S5", "distance_param": "height", "direction": "positive", "depends_on": ["F004"] }
+  ]
+}

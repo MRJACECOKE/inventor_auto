@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "part": {
+    "name": "polygon_cube",
+    "description": "100 mm cube, one recessed regular-polygon pocket 30 mm deep centred on each of the 6 faces. M001/M002 are user-stated (10 cm / 3 cm). M003..M008 (the six polygon sizes) are PROVISIONAL placeholders chosen to prove the pipeline - replace with real measured values and re-run Phase E->I.",
+    "units": "mm"
+  },
+  "source_images": [
+    {
+      "id": "IMG-001",
+      "path": "tests/fixtures/parts/polygon_cube/ex.png",
+      "view": "perspective"
+    }
+  ],
+  "reference": {
+    "origin_definition": "Geometric centre of the cube. Global X, Y, Z each normal to one opposing pair of faces. Each polygon pocket is coaxial with its outward face normal and centred on that face.",
+    "primary_plane": "XY",
+    "symmetry": []
+  },
+  "measurements": [
+    {
+      "id": "M001",
+      "name": "cube_edge_length",
+      "value": 100.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Overall cube edge. User stated 10 cm.",
+      "related_visual_feature": "VF-BODY-001",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M002",
+      "name": "pocket_depth",
+      "value": 30.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Perpendicular depth to the flat pocket floor. User stated 3 cm. Same for all 6 pockets.",
+      "related_visual_feature": "VF-POCKET-ALL",
+      "expected_tool": "depth_gauge"
+    },
+    {
+      "id": "M003",
+      "name": "tri_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+X face TRIANGLE pocket: circle through the 3 vertices. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-XP-3",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M004",
+      "name": "square_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-X face SQUARE pocket: corner-to-corner diagonal. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-XN-4",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M005",
+      "name": "pentagon_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+Y face PENTAGON pocket: circle through the 5 vertices. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-YP-5",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M006",
+      "name": "hexagon_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-Y face HEXAGON pocket: across-corners. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-YN-6",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M007",
+      "name": "heptagon_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+Z face HEPTAGON pocket (assumed 7-gon): circle through the 7 vertices. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-ZP-7",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M008",
+      "name": "octagon_face_circumscribed_dia",
+      "value": 36.0,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-Z face OCTAGON pocket (assumed 8-gon): across-corners. PROVISIONAL 36 mm.",
+      "related_visual_feature": "VF-POCKET-ZN-8",
+      "expected_tool": "calipers"
+    }
+  ],
+  "derived": [],
+  "constraints": [
+    {
+      "kind": "note",
+      "note": "Each polygon pocket centred on its face; walls perpendicular, floor flat, no draft/fillet."
+    },
+    {
+      "kind": "note",
+      "note": "Provisional polygon sizes (36 mm) leave a >= 2 mm wall between adjacent-face pockets and a 40 mm web between opposite-face pockets at depth 30 mm."
+    }
+  ],
+  "material": {
+    "name": null
+  },
+  "metadata": {
+    "measured_by": "provisional-placeholder",
+    "notes": "M001=100 mm and M002=30 mm are user-stated. M003..M008 = 36 mm are NOT measured and NOT derived from the photo - they are stand-in values so the extended pipeline can be proven end-to-end. Replace with real measurements (see measurement-request.json) and re-run.",
+    "measured_date": "2026-09-01"
+  }
+}

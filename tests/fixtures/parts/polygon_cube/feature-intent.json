@@ -1,0 +1,51 @@
+{
+  "intent_version": "1.0",
+  "part_name": "polygon_cube",
+  "primary_plane": "XY",
+  "notes": "Structure only, from ex.png + user text. Body is a cube centred on the origin (base_extrude symmetric). Each face carries one regular-polygon pocket cut 30 mm deep on a work plane offset half an edge from an origin plane. Polygon vertex counts are structural (from the request), not dimensions. All real lengths come from measurement-input.json. Verified against Inventor 2027 default template normals (YZ->+X, XZ->+Y, XY->+Z). Face->polygon: +X tri(3), -X square(4), +Y pent(5), -Y hex(6), +Z hept(7), -Z oct(8).",
+  "parameters": {
+    "cube_edge":     { "measurement_id": "M001" },
+    "pocket_depth":  { "measurement_id": "M002" },
+    "half_edge":     { "derivation": { "formula": "M001 / 2", "source_measurement_ids": ["M001"] }, "unit": "mm" },
+    "tri_dia":       { "measurement_id": "M003" },
+    "sq_dia":        { "measurement_id": "M004" },
+    "pent_dia":      { "measurement_id": "M005" },
+    "hex_dia":       { "measurement_id": "M006" },
+    "hept_dia":      { "measurement_id": "M007" },
+    "oct_dia":       { "measurement_id": "M008" }
+  },
+  "sketches": [
+    { "id": "S1", "plane": "XY",
+      "profile": { "type": "rectangle", "width_param": "cube_edge", "height_param": "cube_edge", "corner": "center" } },
+
+    { "id": "S2", "plane": "YZ", "offset_param": "half_edge", "offset": "positive",
+      "profile": { "type": "polygon", "sides": 3, "circumdiameter_param": "tri_dia" } },
+    { "id": "S3", "plane": "YZ", "offset_param": "half_edge", "offset": "negative",
+      "profile": { "type": "polygon", "sides": 4, "circumdiameter_param": "sq_dia" } },
+    { "id": "S4", "plane": "XZ", "offset_param": "half_edge", "offset": "positive",
+      "profile": { "type": "polygon", "sides": 5, "circumdiameter_param": "pent_dia" } },
+    { "id": "S5", "plane": "XZ", "offset_param": "half_edge", "offset": "negative",
+      "profile": { "type": "polygon", "sides": 6, "circumdiameter_param": "hex_dia" } },
+    { "id": "S6", "plane": "XY", "offset_param": "half_edge", "offset": "positive",
+      "profile": { "type": "polygon", "sides": 7, "circumdiameter_param": "hept_dia" } },
+    { "id": "S7", "plane": "XY", "offset_param": "half_edge", "offset": "negative",
+      "profile": { "type": "polygon", "sides": 8, "circumdiameter_param": "oct_dia" } }
+  ],
+  "features": [
+    { "id": "F001", "type": "base_extrude", "sketch": "S1",
+      "distance_param": "cube_edge", "direction": "symmetric", "depends_on": [] },
+
+    { "id": "F002", "type": "extrude_cut", "sketch": "S2",
+      "distance_param": "pocket_depth", "direction": "negative", "depends_on": ["F001"] },
+    { "id": "F003", "type": "extrude_cut", "sketch": "S3",
+      "distance_param": "pocket_depth", "direction": "positive", "depends_on": ["F001"] },
+    { "id": "F004", "type": "extrude_cut", "sketch": "S4",
+      "distance_param": "pocket_depth", "direction": "negative", "depends_on": ["F001"] },
+    { "id": "F005", "type": "extrude_cut", "sketch": "S5",
+      "distance_param": "pocket_depth", "direction": "positive", "depends_on": ["F001"] },
+    { "id": "F006", "type": "extrude_cut", "sketch": "S6",
+      "distance_param": "pocket_depth", "direction": "negative", "depends_on": ["F001"] },
+    { "id": "F007", "type": "extrude_cut", "sketch": "S7",
+      "distance_param": "pocket_depth", "direction": "positive", "depends_on": ["F001"] }
+  ]
+}

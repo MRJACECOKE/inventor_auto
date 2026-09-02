@@ -1,0 +1,103 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>인수인계 문서 — L자 코스</title><style>
+/* Light theme only - dark mode intentionally disabled. Font: Malgun Gothic. */
+:root{
+  --bg:#ffffff; --fg:#1c2024; --muted:#5b6570; --border:#d7dde3;
+  --accent:#0f6fd6; --code-bg:#f4f6f8; --th-bg:#eef2f6; --quote-bg:#f6f8fa;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:#ffffff;}
+body{background:var(--bg);color:var(--fg);margin:0;
+  font:16px/1.65 "Malgun Gothic","맑은 고딕",Dotum,"돋움",sans-serif;}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px;}
+h1,h2,h3,h4{line-height:1.3;font-weight:700;margin:1.8em 0 .6em;}
+h1{font-size:1.9rem;margin-top:0;border-bottom:2px solid var(--border);padding-bottom:.3em;}
+h2{font-size:1.4rem;border-bottom:1px solid var(--border);padding-bottom:.25em;}
+h3{font-size:1.15rem;} h4{font-size:1rem;color:var(--muted);}
+p{margin:.7em 0;} a{color:var(--accent);}
+hr{border:0;border-top:1px solid var(--border);margin:2em 0;}
+code{background:var(--code-bg);padding:.12em .38em;border-radius:4px;
+  font:0.88em/1.5 "Malgun Gothic",Consolas,"Courier New",monospace;}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;overflow-x:auto;}
+pre code{background:none;padding:0;font-size:0.84rem;
+  font-family:Consolas,"D2Coding","Malgun Gothic","Courier New",monospace;}
+blockquote{margin:1em 0;padding:.6em 1em;background:var(--quote-bg);
+  border-left:3px solid var(--accent);color:var(--muted);border-radius:0 6px 6px 0;}
+blockquote p{margin:.3em 0;}
+ul,ol{padding-left:1.5em;} li{margin:.3em 0;}
+.tablewrap{overflow-x:auto;margin:1em 0;}
+table{border-collapse:collapse;width:100%;font-size:.92rem;}
+th,td{border:1px solid var(--border);padding:7px 11px;text-align:left;vertical-align:top;}
+th{background:var(--th-bg);font-weight:600;}
+tr:nth-child(even) td{background:#f7f9fb;}
+.docnav{font-size:.9rem;margin-bottom:2.5em;padding-bottom:1em;border-bottom:1px solid var(--border);}
+.docnav a{margin-right:1.2em;}
+figure.flow{margin:1.4em 0;padding:0;}
+figure.flow svg{width:100%;height:auto;max-width:760px;display:block;
+  border:1px solid var(--border);border-radius:8px;background:#fff;}
+figure.flow figcaption{font-size:.85rem;color:var(--muted);margin-top:.5em;}
+@media print{.docnav{display:none}body{font-size:11pt}.wrap{max-width:none}
+  figure.flow svg{border:1px solid #999}}
+</style></head><body><div class="wrap"><div class="docnav"><a href="index.html">← 목차</a><a href="01-HANDOFF.html">인수인계</a><a href="02-ENGINEERING.html">엔지니어링</a><a href="02-ENGINEERING_ver2.html">엔지니어링(쉬움)</a><a href="03-SPECIFICATION.html">명세서</a></div><h1>인수인계 문서 — L자 코스 (corner_line)</h1>
+<blockquote><p>대상: <code>corner_line/</code> 사진에서 만든 Isaac Sim용 L자 통로 CAD 일체.<br>범위: <code>l_course_combined</code> 는 <strong>제외</strong> (요청에 따라).<br>작성 기준일: 2026-09-01 · Inventor 2027.1 (build 31.1) · 검증 전부 PASS.</p></blockquote>
+<hr>
+<h2>1. 한 줄 요약</h2>
+<p><code>corner_line/</code> 의 사진 2장(90° 코너 실내)을 <strong>구조 참조</strong>로만 쓰고, 사용자가 현장에서 잰<br>실측치(폭·길이·높이)를 단일 진실원천(SSOT)으로 삼아, <strong>속 빈 L자 복도</strong>(바닥 슬래브 +<br>내·외벽, 양 끝 개방)를 파라메트릭 <code>.ipt</code> 로 생성했다. Isaac Sim 씬에 바로 임포트 가능.</p>
+<hr>
+<h2>1.1 전체 흐름 (플로우 다이어그램)</h2>
+<p>작업은 항상 아래 9단계(Phase A–I)를 따른다. <strong>E(검증)는 하드 게이트</strong>로, 클린 통과 전에는<br>Inventor가 실행되지 않는다. 검증 실패 시 사용자 실측 수정으로(빨강 점선), 빌드·형상 검증<br>실패 시 피처 계획으로(주황 점선) 되돌아간다. 단계별 상세는 엔지니어링 문서 §2·§2.1 참조.</p>
+<figure class="flow"><svg viewBox="0 0 760 812" xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic, sans-serif" role="img" aria-label="Photo-to-IPT 파이프라인 플로우 (Phase A-I)"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#334"/></marker><marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c23"/></marker><marker id="aho" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e58a00"/></marker></defs><line x1="270.0" y1="84" x2="270.0" y2="112" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="172" x2="270.0" y2="200" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="260" x2="270.0" y2="288" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="348" x2="270.0" y2="376" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="436" x2="270.0" y2="464" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="524" x2="270.0" y2="552" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="612" x2="270.0" y2="640" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="700" x2="270.0" y2="728" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><rect x="44" y="26" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="55.0" r="15" fill="#1c2024"/><text x="71" y="60.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">A</text><text x="96" y="49" font-size="14.5" font-weight="700" fill="#1c2024">이미지 인테이크</text><text x="96" y="68" font-size="11" fill="#55606b">사진 경로 수령 · Inventor 미기동</text><rect x="44" y="114" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="143.0" r="15" fill="#1c2024"/><text x="71" y="148.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">B</text><text x="96" y="137" font-size="14.5" font-weight="700" fill="#1c2024">시각 구조 분석</text><text x="96" y="156" font-size="11" fill="#55606b">IMAGE ANALYSIS 블록 · mm/deg 없음</text><rect x="44" y="202" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="231.0" r="15" fill="#1c2024"/><text x="71" y="236.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">C</text><text x="96" y="225" font-size="14.5" font-weight="700" fill="#1c2024">측정 요청 생성</text><text x="96" y="244" font-size="11" fill="#55606b">measurement-request.json + feature-intent.json</text><rect x="44" y="290" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="319.0" r="15" fill="#1c2024"/><text x="71" y="324.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">D</text><text x="96" y="313" font-size="14.5" font-weight="700" fill="#1c2024">사용자 실측 입력</text><text x="96" y="332" font-size="11" fill="#55606b">measurement-input.json  (단일 진실원천)</text><rect x="44" y="378" width="452" height="58" rx="9" fill="#fdeef0" stroke="#e2a9b2" stroke-width="1.4"/><circle cx="71" cy="407.0" r="15" fill="#1c2024"/><text x="71" y="412.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">E</text><text x="96" y="401" font-size="14.5" font-weight="700" fill="#1c2024">검증 게이트</text><text x="96" y="420" font-size="11" fill="#55606b">validate_measurements.py · 스키마 + 기하 일관성</text><rect x="44" y="466" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="495.0" r="15" fill="#1c2024"/><text x="71" y="500.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">F</text><text x="96" y="489" font-size="14.5" font-weight="700" fill="#1c2024">피처 계획</text><text x="96" y="508" font-size="11" fill="#55606b">plan_cad.py → cad-plan.json (결정론적, sha256)</text><rect x="44" y="554" width="452" height="58" rx="9" fill="#eef7ef" stroke="#a9cdb0" stroke-width="1.4"/><circle cx="71" cy="583.0" r="15" fill="#1c2024"/><text x="71" y="588.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">G</text><text x="96" y="577" font-size="14.5" font-weight="700" fill="#1c2024">Inventor 빌드</text><text x="96" y="596" font-size="11" fill="#55606b">inventor_build.ps1 · PowerShell 5.1 STA · COM</text><rect x="44" y="642" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="671.0" r="15" fill="#1c2024"/><text x="71" y="676.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">H</text><text x="96" y="665" font-size="14.5" font-weight="700" fill="#1c2024">검증</text><text x="96" y="684" font-size="11" fill="#55606b">verify_ipt.ps1 + 형상 확인 (bbox · 체적)</text><rect x="44" y="730" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="759.0" r="15" fill="#1c2024"/><text x="71" y="764.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">I</text><text x="96" y="753" font-size="14.5" font-weight="700" fill="#1c2024">리포트</text><text x="96" y="772" font-size="11" fill="#55606b">build-report.md + build-log.txt</text><path d="M496,407.0 H562 V319.0 H498" fill="none" stroke="#c23" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ahr)"/><text x="568" y="363.0" font-size="10.5" fill="#c23" writing-mode="tb">VALIDATION_FAILED → 수정</text><path d="M496,671.0 H526 V495.0 H498" fill="none" stroke="#e58a00" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#aho)"/><text x="532" y="583.0" font-size="10.5" fill="#e58a00" writing-mode="tb">형상/건강도 불량 → 재계획</text></svg><figcaption>그림 1. Photo-to-IPT 파이프라인 (Phase A–I). 실선 = 정상 진행, 빨강 점선 = 검증 실패 시 사용자 실측 수정으로 복귀(Inventor 미실행), 주황 점선 = 빌드/형상 검증 실패 시 피처 계획으로 복귀.</figcaption></figure>
+<ul><li><strong>A–C</strong> (Claude): 사진에서 구조만 분석하고, 채워야 할 실측 항목 목록(<code>measurement-request.json</code>)과 파라미터 매핑(<code>feature-intent.json</code>)을 생성.</li><li><strong>D</strong> (사용자): 현장 실측값 입력 → <code>measurement-input.json</code>.</li><li><strong>E–I</strong> (스크립트): 검증 → 결정론적 피처 계획 → Inventor COM 빌드 → <code>.ipt</code> 재검증 → 리포트.</li></ul>
+<hr>
+<h2>2. 어떤 사진으로 무엇을 만들었나 (핵심)</h2>
+<div class="tablewrap"><table><thead><tr><th>사진</th><th>사진이 보여주는 것</th><th>만든 산출물</th><th>사진에서 얻은 값 (구조/치수 근거)</th></tr></thead><tbody><tr><td><strong><code>90_degree_corner_1.jpg</code></strong></td><td>넓은 실내 전경. 무광 검은 패널 벽이 오른쪽을 따라 깊게 이어지다 90° 외부 코너로 꺾임. 개방된 쇼룸 바닥, 천장고 ≈ 4.7 m. → <strong>큰 L자 통로</strong></td><td><strong><code>l_course_big.ipt</code></strong> (주력). 파이프라인 검증용 초기본 <code>l_corridor_course</code> / <code>l_corridor_course_ver2</code> 도 이 사진 계열에서 시작</td><td>큰 L 안목 폭 <strong>5450</strong>; leg1 <strong>5220</strong>, leg2 <strong>5000</strong> (둘 다 검은 벽 안쪽 꼭짓점 기준); 천장고 <strong>4700</strong></td></tr><tr><td><strong><code>90_degree_corner_2.jpg</code></strong></td><td>같은 검은 벽 코너를 근접 촬영. 유리문 쪽으로 갈라지는 <strong>작고 좁은 L자 분기</strong></td><td><strong><code>l_course_small.ipt</code></strong></td><td>작은 L 안목 폭 <strong>2430</strong>; 양쪽 다리 <strong>1520</strong> (내측 꼭짓점 기준, 대칭); 천장고 <strong>4700</strong></td></tr><tr><td>두 사진 공통</td><td>90° 코너, 바닥→천장 ≈ 4700 mm, 벽은 격실(파티션) 구조라 두께 정밀 측정 불가 → 공칭값 사용</td><td>전체</td><td>벽 두께 공칭 100 mm(초기본) / <strong>150 mm</strong>(큰·작은 L), 바닥 슬래브 50 mm(시뮬값)</td></tr></tbody></table></div>
+<blockquote><p><strong>원칙:</strong> 사진에서는 밀리미터/도(度)를 절대 읽지 않는다. 사진은 위상·코너·대칭 등<br><strong>구조만</strong> 제공하고, 모든 실제 길이는 <code>measurement-input.json</code> 에서 온다.<br>자세한 이미지 매핑은 <code>corner_line/annotated_corner_1.png</code>, <code>annotated_corner_2.png</code>,<br><code>plan_v4.png</code> 참조.</p></blockquote>
+<hr>
+<h2>3. 산출물 목록 (l_course_combined 제외)</h2>
+<div class="tablewrap"><table><thead><tr><th>파트</th><th>상태</th><th>용도</th><th><code>.ipt</code> 경로</th></tr></thead><tbody><tr><td><code>l_course_big</code></td><td><strong>최종</strong></td><td>사진 1의 큰 L자 통로</td><td><code>output/l_course_big/l_course_big.ipt</code></td></tr><tr><td><code>l_course_small</code></td><td><strong>최종</strong></td><td>사진 2의 작은 대칭 L자 통로</td><td><code>output/l_course_small/l_course_small.ipt</code></td></tr><tr><td><code>l_corridor_course</code></td><td>참조/회귀</td><td>8-피처 원점정렬 구성법을 Inventor에서 처음으로 관통 검증한 프루프. 치수는 임의(작은 lane)</td><td><code>output/l_corridor_course/l_corridor_course.ipt</code></td></tr><tr><td><code>l_corridor_course_ver2</code></td><td>참조</td><td>사용자 요청 스냅샷. <code>l_corridor_course</code> 와 형상 완전 동일(lane 1000 유지)</td><td><code>output/l_corridor_course_ver2/l_corridor_course_ver2.ipt</code></td></tr></tbody></table></div>
+<p>각 파트 폴더에는 <code>cad-plan.json</code>/<code>.md</code>, <code>build-report.md</code>, <code>build-log.txt</code>,<br><code>validation-report.json</code>, <code>preview_iso.png</code> 가 함께 있다.</p>
+<h3>3.1 검증된 형상 수치</h3>
+<div class="tablewrap"><table><thead><tr><th>파트</th><th>바운딩박스 (mm, X·Y·Z)</th><th>체적 (mm³)</th><th>채움률</th><th>바디</th><th>피처</th><th>결과</th></tr></thead><tbody><tr><td><code>l_course_big</code></td><td>10450 × 10670 × 4700</td><td>25,860,025,000</td><td>4.9 %</td><td>1</td><td>8</td><td>PASS</td></tr><tr><td><code>l_course_small</code></td><td>3950 × 3950 × 4700</td><td>7,917,855,000</td><td>10.8 %</td><td>1</td><td>8</td><td>PASS</td></tr><tr><td><code>l_corridor_course</code></td><td>5755 × 2430 × 4700</td><td>6,915,150,000</td><td>10.5 %</td><td>1</td><td>8</td><td>PASS</td></tr><tr><td><code>l_corridor_course_ver2</code></td><td>5755 × 2430 × 4700</td><td>6,915,150,000</td><td>10.5 %</td><td>1</td><td>8</td><td>PASS</td></tr></tbody></table></div>
+<p>체적은 전부 해석식(바닥 L 슬래브 + 외벽 L + 내벽 L)과 mm³ 단위까지 일치.</p>
+<hr>
+<h2>4. 재현 / 수정 절차</h2>
+<p>전제: Windows 11 + Autodesk Inventor 2027 설치, COM ProgID <code>Inventor.Application</code> 등록.</p>
+<pre><code># 1) 검증 (스키마 + 기하 일관성) — 하드 게이트
+python scripts/validate_measurements.py input/&lt;part&gt;/measurement-input.json \
+    --report output/&lt;part&gt;/validation-report.json
+
+# 2) 결정론적 피처 계획
+python scripts/plan_cad.py --measurements input/&lt;part&gt;/measurement-input.json \
+    --intent input/&lt;part&gt;/feature-intent.json --out-dir output/&lt;part&gt;
+
+# 3) Inventor COM 빌드 → .ipt → 검증 → 리포트  (반드시 Windows PowerShell 5.1)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/inventor_build.ps1 \
+    -PlanPath output/&lt;part&gt;/cad-plan.json</code></pre>
+<p><code>&lt;part&gt;</code> = <code>l_course_big</code> 또는 <code>l_course_small</code> 또는 <code>l_corridor_course_ver2</code>.<br>(<code>l_corridor_course</code> 의 입력은 <code>input/wall_panel_corner_module/measurement-input.json</code> 에 있음 — §6 참조.)</p>
+<p><strong>치수만 바꿔 재빌드:</strong> 해당 <code>input/&lt;part&gt;/measurement-input.json</code> 의 <code>value</code> 만 수정 →<br>위 3단계 재실행. 파일명은 그대로 갱신된다.</p>
+<p><strong>제약(검증기가 강제):</strong><br><code>lane_width + 2 × wall_thickness &lt; seg_a_length</code> <strong>그리고</strong> <code>&lt; seg_b_length</code>,<br>그리고 <code>floor_thickness &lt; wall_height</code>.</p>
+<hr>
+<h2>5. 좌표계 · 파라미터 (모든 파트 공통)</h2>
+<ul><li><strong>원점 O</strong> = L자의 바깥(볼록) 코너, 바닥면.</li><li><strong>+X</strong> = leg B 방향 · <strong>+Y</strong> = leg A 방향 · <strong>+Z</strong> = 위.</li><li>바닥 슬래브: L 전체 풋프린트, Z 0..<code>floor_thickness</code>.</li><li>외벽: <code>X=0</code>(leg A) 및 <code>Y=0</code>(leg B) 모서리, Z 0..<code>wall_height</code>, 두께 <code>wall_thickness</code>.</li><li>내벽: 안쪽으로 <code>lane_width + wall_thickness</code> 오프셋, 동일 두께·높이. <strong>= 사진의 검은 패널 벽</strong>(오목 모서리).</li><li>통로(lane): 내·외벽 사이 순폭 <code>lane_width</code>, <strong>leg A·leg B 양 끝 개방</strong>.</li></ul>
+<div class="tablewrap"><table><thead><tr><th>측정 ID</th><th>이름</th><th>의미</th></tr></thead><tbody><tr><td>M001</td><td><code>seg_a_length</code></td><td>O에서 leg A 개방단까지 외곽 길이</td></tr><tr><td>M002</td><td><code>seg_b_length</code></td><td>O에서 leg B 개방단까지 외곽 길이</td></tr><tr><td>M003</td><td><code>lane_width</code></td><td>통로 순폭</td></tr><tr><td>M004</td><td><code>wall_thickness</code></td><td>내·외벽 공통 두께</td></tr><tr><td>M005</td><td><code>wall_height</code></td><td>바닥(Z=0)에서 벽 상단까지</td></tr><tr><td>M006</td><td><code>floor_thickness</code></td><td>바닥 슬래브 두께</td></tr><tr><td>D001</td><td><code>strip_width</code></td><td><code>= M003 + 2·M004</code> (다리 전체폭)</td></tr><tr><td>D002</td><td><code>inner_off</code></td><td><code>= M003 + M004</code> (내벽 오프셋)</td></tr></tbody></table></div>
+<blockquote><p><strong>중요한 데이텀 변환:</strong> 사용자가 부르는 다리 길이(예: 5220, 5000, 1520)는<br><strong>내측(검은 벽) 꼭짓점 기준</strong>이다. 모델의 <code>seg_*_length</code> = (내측 기준 길이) + (안목 폭).<br>예: 큰 L <code>seg_a_length</code> = 5220 + 5450 = <strong>10670</strong>. 이 변환을 놓쳐 초기에 여러 번 재빌드했음.</p></blockquote>
+<hr>
+<h2>6. 주의사항 / 함정</h2>
+<ol><li><strong>PowerShell 버전:</strong> Inventor COM 단계는 <strong>Windows PowerShell 5.1 (<code>powershell.exe</code>, STA)</strong> 에서만.</li></ol>
+<p>   <code>pwsh</code> 7 은 MTA라 일부 COM 호출이 조용히 null 반환. 러너 스크립트가 STA 아니면 실행 거부한다.</p>
+<ol><li><strong><code>input/wall_panel_corner_module/</code> 폴더:</strong> 이름은 옛 가설(&quot;벽 패널 코너 모듈&quot;)에서 유래.</li></ol>
+<p>   현재 내용은 <strong>L자 코리도 재사용 템플릿</strong>(<code>feature-intent.json</code> = 8-피처, <code>measurement-request.json</code> = 빈 템플릿).<br>   <code>measurement-input.json</code> 에는 <code>l_corridor_course</code> v1 실제값(2430/5755/1000/100/4700/50)이 들어 있다. 헷갈리지 말 것.</p>
+<ol><li><strong>러너 능력 한계(왜 이렇게 만들었나):</strong></li><li><code>rectangle</code> 프로파일은 <code>corner: origin</code> / <code>center</code> 만. 임의 평면내 위치 배치 불가 → 모든 사각형이 원점에서 성장.</li><li><code>polyline</code>/슬롯형 프로파일 미구현. 오프셋 스케치 평면은 평면 법선 방향으로만.</li><li><code>rectangular_pattern</code> 은 전역 X(또는 X+Y)만. Y단독·Z 불가.</li><li>fillet/chamfer 셀렉터는 <code>all_vertical_outer</code> 만 구현.</li></ol>
+<p>   → L자를 &quot;솔리드 L 프리즘 → 관통 절삭 → 바닥·외벽 add&quot; 8-피처로 구성한 이유.</p>
+<ol><li><strong>검증은 바디 수만 보지 않는다:</strong> <code>.ipt</code> 재오픈 후 RangeBox == (seg_b × seg_a × wall_height),</li></ol>
+<p>   MassProperties.Volume == 해석식 값(§ 엔지니어링 문서), 채움률 상식 확인까지 수행. 형상 붕괴(박스화)를 이걸로 잡아냈다.</p>
+<ol><li><strong>미모델링 항목:</strong> 엔드 캡, 램프, 필렛/모따기, 패널 분할선·초록 띠·걸레받이 등 마감 디테일, 표면 텍스처.</li></ol>
+<p>   벽 두께·바닥 두께는 실측 불가로 공칭/시뮬값.</p>
+<ol><li><strong><code>.git</code> 없음:</strong> 이 저장소는 git 관리가 아니다. 산출물은 파일로만 존재. <code>output/*/OldVersions/</code> 는 Inventor 자동 백업.</li></ol>
+<hr>
+<h2>7. 다음 작업 후보</h2>
+<ul><li><code>l_course_combined</code> (본 문서 범위 밖): 큰 L + 작은 L 을 layout B로 합친 버전. 이미 빌드됨(<code>output/l_course_combined/</code>).</li><li>합친 버전의 &quot;바닥+벽(속 빈)&quot; 형태 — 계단형 내측 경계라 피처 증가하나 가능.</li><li>실측 재확인 시 <code>input/&lt;part&gt;/measurement-input.json</code> 갱신 후 재빌드.</li><li>Isaac Sim 임포트 파이프라인(<code>.ipt</code> → USD/OBJ) 은 본 저장소 범위 밖.</li></ul>
+<hr>
+<h2>8. 참고 파일</h2>
+<div class="tablewrap"><table><thead><tr><th>목적</th><th>경로</th></tr></thead><tbody><tr><td>사진 원본</td><td><code>corner_line/90_degree_corner_1.jpg</code>, <code>..._2.jpg</code></td></tr><tr><td>주석 사진 (측정 위치)</td><td><code>corner_line/annotated_corner_1.png</code>, <code>annotated_corner_2.png</code></td></tr><tr><td>평면도 재구성</td><td><code>corner_line/plan_v4.png</code> (최종), <code>plan_v3.png</code>, <code>plan_view.png</code></td></tr><tr><td>파이프라인 스펙</td><td><code>docs/spec/00..07</code> + <code>docs/spec/TRACEABILITY.md</code></td></tr><tr><td>스키마</td><td><code>schemas/measurement.schema.json</code>, <code>schemas/cad-feature-plan.schema.json</code></td></tr><tr><td>엔지니어링 상세</td><td><code>docs/l-courses/02-ENGINEERING.md</code></td></tr><tr><td>파트 명세</td><td><code>docs/l-courses/03-SPECIFICATION.md</code></td></tr></tbody></table></div></div></body></html>

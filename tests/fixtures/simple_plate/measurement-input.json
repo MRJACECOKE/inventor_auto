@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "part": {
+    "name": "simple_plate",
+    "description": "Synthetic E2E fixture: rectangular plate, one through hole, filleted vertical corners. Dimensions are test data, NOT derived from any photo.",
+    "units": "mm"
+  },
+  "source_images": [
+    { "id": "IMG-000", "path": "synthetic-fixture-no-image", "view": "front" }
+  ],
+  "reference": {
+    "origin_definition": "back-lower-left corner of the plate; +X to the right, +Y up, +Z out of the front face",
+    "primary_plane": "XY",
+    "symmetry": []
+  },
+  "measurements": [
+    { "id": "M001", "name": "overall_width", "value": 100.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Max overall width across the plate with calipers.", "related_visual_feature": "VF-FACE-001", "expected_tool": "calipers" },
+    { "id": "M002", "name": "overall_height", "value": 60.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Max overall height of the plate with calipers.", "related_visual_feature": "VF-FACE-001", "expected_tool": "calipers" },
+    { "id": "M003", "name": "thickness", "value": 6.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Plate thickness with calipers, away from the fillets.", "related_visual_feature": "VF-FACE-001", "expected_tool": "calipers" },
+    { "id": "M004", "name": "hole_dia", "value": 8.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Inner diameter of the through hole with calipers.", "related_visual_feature": "VF-HOLE-001", "expected_tool": "calipers" },
+    { "id": "M005", "name": "hole_x_from_origin", "value": 20.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Distance from the left edge to the hole centre.", "related_visual_feature": "VF-HOLE-001", "expected_tool": "calipers" },
+    { "id": "M006", "name": "hole_y_from_origin", "value": 30.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Distance from the bottom edge to the hole centre.", "related_visual_feature": "VF-HOLE-001", "expected_tool": "calipers" },
+    { "id": "M007", "name": "corner_radius", "value": 5.0, "unit": "mm", "type": "length", "required": true,
+      "measurement_instruction": "Radius of the rounded vertical corners with a radius gauge.", "related_visual_feature": "VF-FILLET-001", "expected_tool": "radius_gauge" }
+  ],
+  "derived": [],
+  "constraints": [],
+  "material": { "name": "aluminium 6061" },
+  "metadata": { "measured_by": "fixture", "notes": "golden E2E fixture", "measured_date": "2026-09-01" }
+}

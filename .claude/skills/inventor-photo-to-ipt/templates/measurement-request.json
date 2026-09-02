@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "part": {
+    "name": "REPLACE_part_name",
+    "description": "",
+    "units": "mm"
+  },
+  "source_images": [
+    { "id": "IMG-001", "path": "provided-in-chat", "view": "front" }
+  ],
+  "reference": {
+    "origin_definition": "REPLACE: describe the physical origin, e.g. 'back-lower-left corner'",
+    "primary_plane": "XY",
+    "symmetry": []
+  },
+  "measurements": [
+    {
+      "id": "M001",
+      "name": "overall_width",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Measure the maximum overall width with calipers.",
+      "related_visual_feature": "VF-FACE-001",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M002",
+      "name": "overall_height",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Measure the maximum overall height with calipers.",
+      "related_visual_feature": "VF-FACE-001",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M003",
+      "name": "thickness",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Measure the material thickness with calipers, away from any fillet.",
+      "related_visual_feature": "VF-FACE-001",
+      "expected_tool": "calipers"
+    }
+  ],
+  "derived": [],
+  "constraints": [],
+  "material": { "name": null },
+  "metadata": { "measured_by": null, "notes": null, "measured_date": null }
+}

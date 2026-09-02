@@ -1,0 +1,20 @@
+# Project metadata + tool config. The pipeline itself has no third-party runtime
+# dependencies (stdlib only); [project.optional-dependencies] gui mirrors
+# requirements-dev.txt for the .exe build.
+[project]
+name = "inventor-auto"
+version = "0.1.0"
+description = "Photo-to-IPT engineering agent for Autodesk Inventor 2027 - structure from photos, every dimension from a user measurement JSON."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+gui = [
+    "pyside6==6.11.2",
+    "pyinstaller==6.15.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

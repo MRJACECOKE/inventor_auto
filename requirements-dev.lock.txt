@@ -1,0 +1,16 @@
+# Fully resolved dependency closure of requirements-dev.txt.
+# Generated on Windows / CPython 3.11.7 with pip. Regenerate on a deliberate
+# version bump (see requirements-dev.txt header).
+#
+#   python -m pip install -r requirements-dev.lock.txt
+#
+altgraph==0.17.5
+packaging==26.3
+pefile==2023.2.7
+pyinstaller==6.15.0
+pyinstaller-hooks-contrib==2026.6
+PySide6==6.11.2
+PySide6_Addons==6.11.2
+PySide6_Essentials==6.11.2
+pywin32-ctypes==0.2.3
+shiboken6==6.11.2

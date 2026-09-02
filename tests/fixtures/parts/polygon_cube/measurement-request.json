@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "part": {
+    "name": "polygon_cube",
+    "description": "100 mm reference cube with one recessed (음각) regular-polygon pocket, 30 mm deep, centred on each of the 6 faces. Polygon order: +X triangle(3), -X square(4), +Y pentagon(5), -Y hexagon(6), +Z heptagon(7), -Z octagon(8). The 7-gon/8-gon on the two Z faces are an assumption (user wrote '삼각형, 사각형, 오각형, 육각형 등') - change 'sides' in feature-intent.json if a different polygon is wanted.",
+    "units": "mm"
+  },
+  "source_images": [
+    { "id": "IMG-001", "path": "C:/Users/user/Desktop/inventor_auto/test_exe/ex.png", "view": "perspective" }
+  ],
+  "reference": {
+    "origin_definition": "Geometric centre of the cube. Global X, Y, Z each normal to one opposing pair of faces. Each polygon pocket is coaxial with its outward face normal and centred on that face.",
+    "primary_plane": "XY",
+    "symmetry": []
+  },
+  "measurements": [
+    {
+      "id": "M001",
+      "name": "cube_edge_length",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Overall cube edge, one quantity. User stated 10 cm; confirm the exact machined value with calipers across a full face, away from any pocket.",
+      "related_visual_feature": "VF-BODY-001",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M002",
+      "name": "pocket_depth",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Perpendicular depth from the outer face plane to the flat pocket floor, one quantity. User stated 3 cm; confirm with a depth gauge. Assumed identical for all 6 pockets - if depths differ, split into M002a..M002f and add one parameter per pocket in feature-intent.json.",
+      "related_visual_feature": "VF-POCKET-ALL",
+      "expected_tool": "depth_gauge"
+    },
+    {
+      "id": "M003",
+      "name": "tri_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+X face, TRIANGLE pocket. Diameter of the circle through the 3 vertices (vertex-to-centre x2). One quantity. If you can only measure edge length E, circumscribed dia = E / sin(60 deg) = E * 1.1547.",
+      "related_visual_feature": "VF-POCKET-XP-3",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M004",
+      "name": "square_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-X face, SQUARE pocket. Diameter of the circle through the 4 vertices (corner-to-corner diagonal). One quantity. From edge length E: circumscribed dia = E * 1.41421.",
+      "related_visual_feature": "VF-POCKET-XN-4",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M005",
+      "name": "pentagon_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+Y face, PENTAGON pocket. Diameter of the circle through the 5 vertices (2x circumradius). One quantity. From edge length E: circumscribed dia = E / sin(36 deg) = E * 1.70130.",
+      "related_visual_feature": "VF-POCKET-YP-5",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M006",
+      "name": "hexagon_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-Y face, HEXAGON pocket. Diameter of the circle through the 6 vertices (across-corners = 2x edge length). One quantity. Across-flats F relates as circumscribed dia = F * 1.15470.",
+      "related_visual_feature": "VF-POCKET-YN-6",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M007",
+      "name": "heptagon_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "+Z (top) face, HEPTAGON (7-gon) pocket - ASSUMED polygon type, confirm. Diameter of the circle through the 7 vertices (2x circumradius). One quantity. From edge length E: circumscribed dia = E / sin(180/7 deg) = E * 2.30476.",
+      "related_visual_feature": "VF-POCKET-ZP-7",
+      "expected_tool": "calipers"
+    },
+    {
+      "id": "M008",
+      "name": "octagon_face_circumscribed_dia",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "-Z (bottom) face, OCTAGON (8-gon) pocket - ASSUMED polygon type, confirm. Diameter of the circle through the 8 vertices (across-corners). One quantity. From edge length E: circumscribed dia = E / sin(22.5 deg) = E * 2.61313.",
+      "related_visual_feature": "VF-POCKET-ZN-8",
+      "expected_tool": "calipers"
+    }
+  ],
+  "derived": [],
+  "constraints": [
+    { "kind": "note", "note": "Each polygon pocket is centred on its face (pocket axis passes through the face centre)." },
+    { "kind": "note", "note": "Pocket side walls are perpendicular to the face; floor is flat and parallel to the face. No draft, no floor fillet unless a later measurement adds one." },
+    { "kind": "note", "note": "Regular polygons only: all edges equal, all interior angles equal. One vertex points toward local +Z on the side faces and local +Y on the top/bottom faces (clocking = 0)." },
+    { "kind": "note", "note": "All six pocket depths equal M002 unless M002 is split per face." }
+  ],
+  "material": { "name": null },
+  "metadata": { "measured_by": null, "notes": null, "measured_date": null }
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "part": {
+    "name": "l_corridor_course",
+    "description": "L-shaped corridor course for an Isaac Sim scene: a thin L floor slab with vertical side walls along the inner and outer edges of the L, open at both ends. Built from origin-anchored rectangles only (v1 runner). Not modeled: end caps, ramps, surface texture, the wall-panel finish detail from the reference photos.",
+    "units": "mm"
+  },
+  "source_images": [
+    { "id": "IMG-001", "path": "corner_line/90_degree_corner_1.jpg", "view": "perspective" },
+    { "id": "IMG-002", "path": "corner_line/90_degree_corner_2.jpg", "view": "perspective" }
+  ],
+  "reference": {
+    "origin_definition": "O = outer (convex) corner of the L corridor at the underside of the floor slab. +X runs along side B, +Y runs along side A, +Z is up. The floor slab occupies Z 0..floor_thickness across the whole L footprint. Side walls occupy Z 0..wall_height along the outer edges (X=0 for leg A, Y=0 for leg B) and along the inner edges (offset by lane_width+wall_thickness). The lane is open at both far ends.",
+    "primary_plane": "XY",
+    "symmetry": []
+  },
+  "measurements": [
+    {
+      "id": "M001",
+      "name": "seg_a_length",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Overall length of the L along side A: from the outer corner O to the open end of leg A, measured along the outer edge. One quantity only. Must be greater than lane_width + 2*wall_thickness.",
+      "related_visual_feature": "VF-FACE-001",
+      "expected_tool": "rule"
+    },
+    {
+      "id": "M002",
+      "name": "seg_b_length",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Overall length of the L along side B: from the outer corner O to the open end of leg B, measured along the outer edge. One quantity only. Must be greater than lane_width + 2*wall_thickness.",
+      "related_visual_feature": "VF-FACE-002",
+      "expected_tool": "rule"
+    },
+    {
+      "id": "M003",
+      "name": "lane_width",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Clear drivable width of the corridor between the inner face of the outer wall and the inner wall. Same for both legs. One quantity only.",
+      "related_visual_feature": "VF-FACE-004",
+      "expected_tool": "rule"
+    },
+    {
+      "id": "M004",
+      "name": "wall_thickness",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Thickness of a side wall, measured horizontally perpendicular to its run. Same value used for the outer wall and the inner wall. One quantity only.",
+      "related_visual_feature": "VF-FACE-003",
+      "expected_tool": "rule"
+    },
+    {
+      "id": "M005",
+      "name": "wall_height",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Overall height of a side wall measured from the ground (Z=0) to its top. The barrier height standing above the lane surface is wall_height minus floor_thickness. One quantity only.",
+      "related_visual_feature": "VF-EDGE-001",
+      "expected_tool": "rule"
+    },
+    {
+      "id": "M006",
+      "name": "floor_thickness",
+      "value": null,
+      "unit": "mm",
+      "type": "length",
+      "required": true,
+      "measurement_instruction": "Thickness of the L floor slab (Z). One quantity only. Must be less than wall_height.",
+      "related_visual_feature": "VF-FACE-004",
+      "expected_tool": "rule"
+    }
+  ],
+  "derived": [
+    {
+      "id": "D001",
+      "name": "strip_width",
+      "type": "length",
+      "unit": "mm",
+      "derivation": { "formula": "M003 + 2 * M004", "source_measurement_ids": ["M003", "M004"] }
+    },
+    {
+      "id": "D002",
+      "name": "inner_off",
+      "type": "length",
+      "unit": "mm",
+      "derivation": { "formula": "M003 + M004", "source_measurement_ids": ["M003", "M004"] }
+    }
+  ],
+  "constraints": [
+    { "kind": "perpendicular", "note": "Leg A and leg B of the corridor meet at 90 degrees at the outer corner O.", "measurement_ids": ["M001", "M002"] },
+    { "kind": "note", "note": "Valid L requires strip_width (= lane_width + 2*wall_thickness) < seg_a_length AND < seg_b_length; also floor_thickness < wall_height.", "measurement_ids": ["M001", "M002", "M003", "M004", "M005", "M006"] }
+  ],
+  "material": { "name": null },
+  "metadata": {
+    "measured_by": null,
+    "notes": "Course geometry for Isaac Sim. Walls on inner + outer edges only; lane open at both ends. No end walls, ramps, fillets or surface detail in this version.",
+    "measured_date": null
+  }
+}

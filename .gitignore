@@ -1,0 +1,22 @@
+# Pipeline working output (regenerated; provenance lives in build-report.md)
+output/
+
+# The user's measured dimensions for their own parts are not committed.
+# Reproducible example measurements live in tests/fixtures/parts/ instead.
+input/*/measurement-input.json
+
+# Test run logs (keep the folder, not its contents)
+tests/results/*.log
+
+__pycache__/
+*.pyc
+.omc/
+.venv/
+.DS_Store
+*.tmp
+
+# PyInstaller (build/IptBuilder.spec and build/build.ps1 stay tracked)
+/build/build/
+/build/dist/
+/dist/
+*.manifest

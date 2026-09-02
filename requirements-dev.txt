@@ -1,0 +1,13 @@
+# Build/dev dependencies for the Photo-to-IPT Builder GUI (.exe).
+#
+# NOT needed to run the pipeline scripts or tests/run_tests.py - the validation,
+# planning and determinism tests are pure stdlib. These are only for building the
+# distributable .exe; the packaged .exe bundles them, so target machines need
+# neither.
+#
+# Pinned exactly for reproducibility (see docs/RUNBOOK.md). The fully resolved
+# dependency closure is in requirements-dev.lock.txt. Bump deliberately, then
+# regenerate the lock:  python -m pip install -r requirements-dev.txt &&
+# python -m pip freeze > (edit requirements-dev.lock.txt).
+pyside6==6.11.2
+pyinstaller==6.15.0

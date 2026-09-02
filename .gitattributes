@@ -1,0 +1,13 @@
+# Force LF on checkout on every platform. The determinism goldens embed a
+# sha256 of the fixture bytes (tests/fixtures/parts/*/measurement-input.json),
+# so line endings must be identical on Windows and Linux or the golden check
+# fails on a fresh clone.
+* text=auto eol=lf
+
+# Binary assets - never touch.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.ipt   binary
+*.pdf   binary

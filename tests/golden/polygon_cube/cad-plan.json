@@ -1,0 +1,212 @@
+{
+  "features": [
+    {
+      "depends_on": [],
+      "direction": "symmetric",
+      "distance_param": "cube_edge",
+      "id": "F001",
+      "sketch": "S1",
+      "type": "base_extrude"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "negative",
+      "distance_param": "pocket_depth",
+      "id": "F002",
+      "sketch": "S2",
+      "type": "extrude_cut"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "positive",
+      "distance_param": "pocket_depth",
+      "id": "F003",
+      "sketch": "S3",
+      "type": "extrude_cut"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "negative",
+      "distance_param": "pocket_depth",
+      "id": "F004",
+      "sketch": "S4",
+      "type": "extrude_cut"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "positive",
+      "distance_param": "pocket_depth",
+      "id": "F005",
+      "sketch": "S5",
+      "type": "extrude_cut"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "negative",
+      "distance_param": "pocket_depth",
+      "id": "F006",
+      "sketch": "S6",
+      "type": "extrude_cut"
+    },
+    {
+      "depends_on": [
+        "F001"
+      ],
+      "direction": "positive",
+      "distance_param": "pocket_depth",
+      "id": "F007",
+      "sketch": "S7",
+      "type": "extrude_cut"
+    }
+  ],
+  "parameters": {
+    "cube_edge": {
+      "measurement_id": "M001",
+      "unit": "mm",
+      "value": 100.0
+    },
+    "half_edge": {
+      "derivation": {
+        "formula": "M001 / 2",
+        "source_measurement_ids": [
+          "M001"
+        ]
+      },
+      "unit": "mm",
+      "value": 50.0
+    },
+    "hept_dia": {
+      "measurement_id": "M007",
+      "unit": "mm",
+      "value": 36.0
+    },
+    "hex_dia": {
+      "measurement_id": "M006",
+      "unit": "mm",
+      "value": 36.0
+    },
+    "oct_dia": {
+      "measurement_id": "M008",
+      "unit": "mm",
+      "value": 36.0
+    },
+    "pent_dia": {
+      "measurement_id": "M005",
+      "unit": "mm",
+      "value": 36.0
+    },
+    "pocket_depth": {
+      "measurement_id": "M002",
+      "unit": "mm",
+      "value": 30.0
+    },
+    "sq_dia": {
+      "measurement_id": "M004",
+      "unit": "mm",
+      "value": 36.0
+    },
+    "tri_dia": {
+      "measurement_id": "M003",
+      "unit": "mm",
+      "value": 36.0
+    }
+  },
+  "part_name": "polygon_cube",
+  "plan_version": "1.0",
+  "provenance": {
+    "measurement_file": "tests/fixtures/parts/polygon_cube/measurement-input.json",
+    "measurement_sha256": "e3ab1f424e761d7da75fdda305312d5e643349356519dd70bbf0c88d76908103",
+    "source_images": [
+      "IMG-001"
+    ]
+  },
+  "sketches": [
+    {
+      "id": "S1",
+      "plane": "XY",
+      "profile": {
+        "corner": "center",
+        "height_param": "cube_edge",
+        "type": "rectangle",
+        "width_param": "cube_edge"
+      }
+    },
+    {
+      "id": "S2",
+      "offset": "positive",
+      "offset_param": "half_edge",
+      "plane": "YZ",
+      "profile": {
+        "circumdiameter_param": "tri_dia",
+        "sides": 3,
+        "type": "polygon"
+      }
+    },
+    {
+      "id": "S3",
+      "offset": "negative",
+      "offset_param": "half_edge",
+      "plane": "YZ",
+      "profile": {
+        "circumdiameter_param": "sq_dia",
+        "sides": 4,
+        "type": "polygon"
+      }
+    },
+    {
+      "id": "S4",
+      "offset": "positive",
+      "offset_param": "half_edge",
+      "plane": "XZ",
+      "profile": {
+        "circumdiameter_param": "pent_dia",
+        "sides": 5,
+        "type": "polygon"
+      }
+    },
+    {
+      "id": "S5",
+      "offset": "negative",
+      "offset_param": "half_edge",
+      "plane": "XZ",
+      "profile": {
+        "circumdiameter_param": "hex_dia",
+        "sides": 6,
+        "type": "polygon"
+      }
+    },
+    {
+      "id": "S6",
+      "offset": "positive",
+      "offset_param": "half_edge",
+      "plane": "XY",
+      "profile": {
+        "circumdiameter_param": "hept_dia",
+        "sides": 7,
+        "type": "polygon"
+      }
+    },
+    {
+      "id": "S7",
+      "offset": "negative",
+      "offset_param": "half_edge",
+      "plane": "XY",
+      "profile": {
+        "circumdiameter_param": "oct_dia",
+        "sides": 8,
+        "type": "polygon"
+      }
+    }
+  ],
+  "units": "mm"
+}

@@ -1,0 +1,208 @@
+{
+  "intent_version": "1.0",
+  "part_name": "l_course_small",
+  "primary_plane": "XY",
+  "notes": "L-shaped corridor course, walls on inner + outer edges, open ends. Origin O = outer convex corner, +X = side B, +Y = side A, +Z up. Derived: strip_width = lane_width + 2*wall_thickness (full leg width incl. both walls); inner_off = lane_width + wall_thickness (offset of the inner wall from O). Build (all rectangles corner:origin): F001/F002 raise a solid L prism strip_width wide, wall_height tall (S1 leg A, S2 leg B). F003/F004 cut two origin-anchored blocks through-all (S3 = inner_off x seg_a_length, S4 = seg_b_length x inner_off), which leaves only the inner-wall L (thickness strip_width - inner_off = wall_thickness). F005/F006 add the full-footprint L floor slab floor_thickness thick (S5, S6). F007/F008 add the outer-wall L, wall_thickness wide, wall_height tall (S7, S8). Result: one solid body = L floor with an outer wall (X=0 / Y=0 edges) and an inner wall (offset inner_off), lane_width clear between them, open at both far ends. Valid only when strip_width < seg_a_length and strip_width < seg_b_length. All real lengths come from measurement-input.json.",
+  "parameters": {
+    "seg_a_length": {
+      "measurement_id": "M001"
+    },
+    "seg_b_length": {
+      "measurement_id": "M002"
+    },
+    "lane_width": {
+      "measurement_id": "M003"
+    },
+    "wall_thickness": {
+      "measurement_id": "M004"
+    },
+    "wall_height": {
+      "measurement_id": "M005"
+    },
+    "floor_thickness": {
+      "measurement_id": "M006"
+    },
+    "strip_width": {
+      "derivation": {
+        "formula": "M003 + 2 * M004",
+        "source_measurement_ids": [
+          "M003",
+          "M004"
+        ]
+      },
+      "unit": "mm"
+    },
+    "inner_off": {
+      "derivation": {
+        "formula": "M003 + M004",
+        "source_measurement_ids": [
+          "M003",
+          "M004"
+        ]
+      },
+      "unit": "mm"
+    }
+  },
+  "sketches": [
+    {
+      "id": "S1",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "strip_width",
+        "height_param": "seg_a_length",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S2",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "seg_b_length",
+        "height_param": "strip_width",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S3",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "inner_off",
+        "height_param": "seg_a_length",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S4",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "seg_b_length",
+        "height_param": "inner_off",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S5",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "strip_width",
+        "height_param": "seg_a_length",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S6",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "seg_b_length",
+        "height_param": "strip_width",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S7",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "wall_thickness",
+        "height_param": "seg_a_length",
+        "corner": "origin"
+      }
+    },
+    {
+      "id": "S8",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "seg_b_length",
+        "height_param": "wall_thickness",
+        "corner": "origin"
+      }
+    }
+  ],
+  "features": [
+    {
+      "id": "F001",
+      "type": "base_extrude",
+      "sketch": "S1",
+      "distance_param": "wall_height",
+      "direction": "positive",
+      "depends_on": []
+    },
+    {
+      "id": "F002",
+      "type": "extrude_add",
+      "sketch": "S2",
+      "distance_param": "wall_height",
+      "direction": "positive",
+      "depends_on": [
+        "F001"
+      ]
+    },
+    {
+      "id": "F003",
+      "type": "extrude_cut",
+      "sketch": "S3",
+      "depth": "through",
+      "direction": "positive",
+      "depends_on": [
+        "F002"
+      ]
+    },
+    {
+      "id": "F004",
+      "type": "extrude_cut",
+      "sketch": "S4",
+      "depth": "through",
+      "direction": "positive",
+      "depends_on": [
+        "F003"
+      ]
+    },
+    {
+      "id": "F005",
+      "type": "extrude_add",
+      "sketch": "S5",
+      "distance_param": "floor_thickness",
+      "direction": "positive",
+      "depends_on": [
+        "F004"
+      ]
+    },
+    {
+      "id": "F006",
+      "type": "extrude_add",
+      "sketch": "S6",
+      "distance_param": "floor_thickness",
+      "direction": "positive",
+      "depends_on": [
+        "F005"
+      ]
+    },
+    {
+      "id": "F007",
+      "type": "extrude_add",
+      "sketch": "S7",
+      "distance_param": "wall_height",
+      "direction": "positive",
+      "depends_on": [
+        "F006"
+      ]
+    },
+    {
+      "id": "F008",
+      "type": "extrude_add",
+      "sketch": "S8",
+      "distance_param": "wall_height",
+      "direction": "positive",
+      "depends_on": [
+        "F007"
+      ]
+    }
+  ]
+}

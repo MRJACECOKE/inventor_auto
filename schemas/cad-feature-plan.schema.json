@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inventor-auto/schemas/cad-feature-plan.schema.json",
+  "title": "Deterministic CAD Feature Plan",
+  "description": "Built from a validated measurement JSON. Consumed by the Inventor PowerShell runner.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["plan_version", "part_name", "units", "provenance", "parameters", "sketches", "features"],
+  "properties": {
+    "plan_version": { "type": "string", "enum": ["1.0"] },
+    "part_name": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$" },
+    "units": { "type": "string", "enum": ["mm", "cm", "in"] },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["measurement_file", "measurement_sha256", "source_images"],
+      "properties": {
+        "measurement_file": { "type": "string" },
+        "measurement_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "source_images": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/parameter" }
+    },
+    "sketches": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sketch" }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/feature" }
+    }
+  },
+  "$defs": {
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "measurement_id": { "type": "string", "pattern": "^[MD][0-9]{3,}$" },
+        "derivation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["formula", "source_measurement_ids"],
+          "properties": {
+            "formula": { "type": "string" },
+            "source_measurement_ids": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "value": { "type": "number" },
+        "unit": { "type": "string", "enum": ["mm", "cm", "in", "deg", "count"] }
+      }
+    },
+    "sketch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "plane", "profile"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S[0-9]+$" },
+        "plane": { "type": "string", "enum": ["XY", "XZ", "YZ"] },
+        "offset_param": { "type": "string" },
+        "offset": { "type": "string", "enum": ["positive", "negative"] },
+        "profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "type": "string", "enum": ["rectangle", "circle", "polygon", "slot", "polyline", "revolve_profile"] },
+            "width_param": { "type": "string" },
+            "height_param": { "type": "string" },
+            "diameter_param": { "type": "string" },
+            "circumdiameter_param": { "type": "string" },
+            "clocking_param": { "type": "string" },
+            "sides": { "type": "integer", "minimum": 3, "maximum": 24 },
+            "length_param": { "type": "string" },
+            "corner": { "type": "string", "enum": ["origin", "center"] },
+            "points_params": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x_param", "y_param"],
+                "properties": {
+                  "x_param": { "type": "string" },
+                  "y_param": { "type": "string" }
+                }
+              }
+            },
+            "axis": { "type": "string", "enum": ["X", "Y", "Z"] }
+          }
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "required": ["id", "type", "depends_on"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^F[0-9]{3,}$" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "base_extrude", "extrude_add", "extrude_cut", "revolve",
+            "hole", "slot", "fillet", "chamfer", "mirror",
+            "rectangular_pattern", "circular_pattern"
+          ]
+        },
+        "depends_on": { "type": "array", "items": { "type": "string", "pattern": "^F[0-9]{3,}$" } },
+        "sketch": { "type": "string", "pattern": "^S[0-9]+$" },
+        "distance_param": { "type": "string" },
+        "angle_param": { "type": "string" },
+        "direction": { "type": "string", "enum": ["positive", "negative", "symmetric"] },
+        "axis": { "type": "string" },
+        "full": { "type": "boolean" },
+        "placement": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["plane"],
+          "properties": {
+            "plane": { "type": "string" },
+            "x_param": { "type": "string" },
+            "y_param": { "type": "string" },
+            "points_params": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x_param", "y_param"],
+                "properties": { "x_param": { "type": "string" }, "y_param": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "diameter_param": { "type": "string" },
+        "depth": { "type": "string" },
+        "depth_param": { "type": "string" },
+        "length_param": { "type": "string" },
+        "width_param": { "type": "string" },
+        "radius_param": { "type": "string" },
+        "edges": { "type": "string" },
+        "plane": { "type": "string" },
+        "of": {
+          "oneOf": [
+            { "type": "string", "pattern": "^F[0-9]{3,}$" },
+            { "type": "array", "items": { "type": "string", "pattern": "^F[0-9]{3,}$" }, "minItems": 1 }
+          ]
+        },
+        "x_count_param": { "type": "string" },
+        "x_spacing_param": { "type": "string" },
+        "y_count_param": { "type": "string" },
+        "y_spacing_param": { "type": "string" },
+        "count_param": { "type": "string" }
+      }
+    }
+  }
+}

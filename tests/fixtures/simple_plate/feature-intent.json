@@ -1,0 +1,36 @@
+{
+  "intent_version": "1.0",
+  "part_name": "simple_plate",
+  "primary_plane": "XY",
+  "notes": "Structure only. Which measurement drives which parameter comes from image analysis; the numbers come from measurement-input.json.",
+  "parameters": {
+    "overall_width":  { "measurement_id": "M001" },
+    "overall_height": { "measurement_id": "M002" },
+    "thickness":      { "measurement_id": "M003" },
+    "hole_dia":       { "measurement_id": "M004" },
+    "hole_x":         { "measurement_id": "M005" },
+    "hole_y":         { "measurement_id": "M006" },
+    "corner_radius":  { "measurement_id": "M007" }
+  },
+  "sketches": [
+    {
+      "id": "S1",
+      "plane": "XY",
+      "profile": {
+        "type": "rectangle",
+        "width_param": "overall_width",
+        "height_param": "overall_height",
+        "corner": "origin"
+      }
+    }
+  ],
+  "features": [
+    { "id": "F001", "type": "base_extrude", "sketch": "S1",
+      "distance_param": "thickness", "direction": "positive", "depends_on": [] },
+    { "id": "F002", "type": "hole",
+      "placement": { "plane": "XY", "x_param": "hole_x", "y_param": "hole_y" },
+      "diameter_param": "hole_dia", "depth": "through", "depends_on": ["F001"] },
+    { "id": "F003", "type": "fillet",
+      "edges": "all_vertical_outer", "radius_param": "corner_radius", "depends_on": ["F001"] }
+  ]
+}

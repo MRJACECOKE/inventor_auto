@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo-to-IPT 사용 가이드</title>
+<style>
+  /* 단일 라이트 테마 — 요청에 따라 다크모드 없음. 모든 색·배경은 명시적으로 지정. */
+  :root {
+    --paper:        #ffffff;
+    --panel:        #f6f8fb;
+    --panel-2:      #eef2f7;
+    --code-bg:      #f3f5f9;
+    --ink:          #1a2230;
+    --ink-soft:     #4c5666;
+    --ink-faint:    #7b8595;
+    --hairline:     #d9dee6;
+    --hairline-2:   #e7ebf1;
+    --accent:       #1f5fbf;
+    --accent-deep:  #163f7d;
+    --accent-tint:  #e8f0fb;
+    --rust:         #a8431c;
+    --rust-tint:    #f8ece6;
+    --teal:         #0f6b6b;
+    --teal-tint:    #e4f1f0;
+    --amber:        #8a5a12;
+    --amber-tint:   #f6eeda;
+
+    --font: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    --mono: Consolas, "D2Coding", "Cascadia Mono", "Courier New", monospace;
+
+    --fs-eyebrow: 0.72rem;
+    --fs-small:   0.83rem;
+    --fs-body:    1rem;
+    --fs-h3:      1.16rem;
+    --fs-h2:      1.5rem;
+    --fs-h1:      2.05rem;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: var(--fs-body);
+    line-height: 1.75;
+    letter-spacing: -0.003em;
+  }
+
+  .wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  /* ---- header ---- */
+  header.top {
+    border-top: 4px solid var(--accent);
+    background: linear-gradient(180deg, var(--panel) 0%, var(--paper) 100%);
+    border-bottom: 1px solid var(--hairline);
+  }
+  header.top .wrap { padding-top: 46px; padding-bottom: 34px; }
+
+  .eyebrow {
+    font-size: var(--fs-eyebrow);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent-deep);
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: var(--fs-h1);
+    line-height: 1.25;
+    font-weight: 700;
+    margin: 0 0 12px;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+  header.top p.lede {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-small);
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .badge b { color: var(--ink); font-weight: 700; }
+  .badge.warn {
+    background: var(--rust-tint);
+    border-color: #e6c4b6;
+    color: var(--rust);
+  }
+
+  /* ---- sections ---- */
+  section { margin-top: 56px; }
+  h2 {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+  }
+  h2 .num {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-right: 10px;
+  }
+  section > p.intro {
+    color: var(--ink-soft);
+    margin: 14px 0 0;
+    max-width: 64ch;
+  }
+  h3 {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    margin: 30px 0 8px;
+  }
+
+  /* ---- golden rule ---- */
+  .rule {
+    margin-top: 22px;
+    background: var(--accent-tint);
+    border: 1px solid #c7dcf5;
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .rule p { margin: 0; }
+  .rule p + p { margin-top: 8px; }
+  .rule strong { color: var(--accent-deep); }
+
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 6px;
+    margin-top: 18px;
+    font-size: var(--fs-small);
+  }
+  .flow .node {
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .flow .arrow { color: var(--accent); font-weight: 700; }
+  .flow .node.out { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .forbidden {
+    margin-top: 14px;
+    font-size: var(--fs-small);
+    color: var(--rust);
+    background: var(--rust-tint);
+    border: 1px solid #e6c4b6;
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .forbidden code {
+    background: transparent;
+    color: var(--rust);
+    font-weight: 700;
+  }
+
+  /* ---- workflow process rail ---- */
+  ol.rail {
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 0;
+    position: relative;
+  }
+  ol.rail::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--hairline);
+  }
+  ol.rail > li {
+    position: relative;
+    padding: 0 0 30px 52px;
+    counter-increment: step;
+  }
+  ol.rail > li:last-child { padding-bottom: 0; }
+  ol.rail > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    background: var(--paper);
+    border: 2px solid var(--accent);
+    color: var(--accent-deep);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  ol.rail { counter-reset: step; }
+
+  .step-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .phase-tag {
+    font-size: var(--fs-eyebrow);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    background: var(--accent-tint);
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .step-title { font-weight: 700; font-size: 1.02rem; }
+  .role {
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+  }
+  .role.user   { background: var(--amber-tint); color: var(--amber); }
+  .role.claude { background: var(--accent-tint); color: var(--accent-deep); }
+  .role.sys    { background: var(--panel-2);    color: var(--ink-soft); }
+  .role.inv    { background: var(--teal-tint);  color: var(--teal); }
+  ol.rail > li p { margin: 4px 0 0; color: var(--ink-soft); }
+  ol.rail > li p code, .files code, li code, td code {
+    background: var(--panel-2);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: var(--mono);
+    font-size: 0.86em;
+    color: var(--ink);
+  }
+
+  /* ---- command block ---- */
+  .cmd {
+    position: relative;
+    margin-top: 12px;
+  }
+  .cmd pre {
+    margin: 0;
+    background: var(--code-bg);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 13px 15px;
+    padding-right: 74px;
+    overflow-x: auto;
+  }
+  .cmd code {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ink);
+    white-space: pre;
+  }
+  .cmd .copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: var(--font);
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--accent-deep);
+    background: var(--paper);
+    border: 1px solid var(--hairline);
+    border-radius: 5px;
+    padding: 4px 9px;
+    cursor: pointer;
+  }
+  .cmd .copy:hover { background: var(--accent-tint); }
+  .cmd .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- command reference ---- */
+  .cmdref { margin-top: 8px; }
+  .cmdref .row { margin-top: 20px; }
+  .cmdref .label {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .cmdref .label .when {
+    font-weight: 400;
+    color: var(--ink-faint);
+    font-size: var(--fs-small);
+    margin-left: 8px;
+  }
+
+  /* ---- checklist ---- */
+  ul.check {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  ul.check li {
+    position: relative;
+    padding-left: 28px;
+    color: var(--ink-soft);
+  }
+  ul.check li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  ul.check li b { color: var(--ink); font-weight: 700; }
+
+  /* ---- scope columns ---- */
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .card h4 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .card.ok    { border-top: 3px solid var(--accent); }
+  .card.defer { border-top: 3px solid var(--amber); }
+  .card.no    { border-top: 3px solid var(--rust); background: var(--rust-tint); border-color: #e6c4b6; }
+  .card ul { margin: 0; padding-left: 18px; color: var(--ink-soft); }
+  .card ul li { margin: 3px 0; }
+  .card.no ul { color: var(--rust); }
+
+  .stops {
+    margin-top: 16px;
+    border: 1px solid #e6c4b6;
+    background: var(--rust-tint);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .stops h4 { margin: 0 0 8px; color: var(--rust); font-size: 0.95rem; }
+  .stops p { margin: 0; color: var(--rust); font-size: var(--fs-small); }
+
+  /* ---- file tree ---- */
+  .files {
+    margin-top: 16px;
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+  }
+  .files pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.83rem;
+    line-height: 1.7;
+    color: var(--ink);
+    white-space: pre;
+  }
+  .files .c { color: var(--ink-faint); }
+
+  table.mini {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: var(--fs-small);
+  }
+  table.mini th, table.mini td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--hairline-2);
+    vertical-align: top;
+  }
+  table.mini th {
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 0.08em;
+  }
+
+  footer.foot {
+    margin-top: 72px;
+    padding-top: 22px;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-faint);
+    font-size: var(--fs-small);
+  }
+  footer.foot code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    color: var(--ink-soft);
+  }
+  footer.foot p { margin: 4px 0; }
+
+  a { color: var(--accent-deep); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 640px) {
+    :root { --fs-h1: 1.7rem; --fs-h2: 1.3rem; }
+    .cols { grid-template-columns: 1fr; }
+    .wrap { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">Autodesk Inventor 2027 · 로컬 파이프라인</p>
+    <h1>Photo-to-IPT 사용 가이드</h1>
+    <p class="lede">부품 사진으로 <b>구조</b>를 이해하고, 사용자가 <b>실측한 JSON</b>을 유일한 치수 근거로 삼아
+      파라메트릭 <code>.ipt</code>를 생성·검증합니다. 사진에서 치수를 추측하지 않습니다.</p>
+    <div class="badges">
+      <span class="badge"><b>Windows 11</b> (네이티브)</span>
+      <span class="badge"><b>Inventor 2027</b> · 2027.1 (31.1)</span>
+      <span class="badge"><b>Windows PowerShell 5.1</b> · STA</span>
+      <span class="badge"><b>Python 3.9+</b> · pip 불필요</span>
+      <span class="badge warn">pwsh 7 (MTA) 사용 금지</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1. 핵심 원칙 -->
+  <section>
+    <h2><span class="num">1</span>핵심 원칙</h2>
+    <p class="intro">사진은 <b>형상 가설</b>의 근거이고, 사용자 실측 JSON은 <b>공학적 사실</b>입니다.
+      CAD 피처 플랜은 오직 실측 사실에서 만들어집니다.</p>
+
+    <div class="rule">
+      <p><strong>사진 →</strong> topology, 면, 구멍·슬롯, 축, 대칭, 반복 패턴, 기준면 후보 <em>(구조만)</em></p>
+      <p><strong>사용자 JSON →</strong> 모든 길이·직경·반경·깊이·각도·위치 <em>(SSOT, 유일한 치수 근거)</em></p>
+    </div>
+
+    <div class="flow" aria-label="데이터 흐름">
+      <span class="node">사진</span><span class="arrow">›</span>
+      <span class="node">관찰</span><span class="arrow">›</span>
+      <span class="node">실측 요청</span><span class="arrow">›</span>
+      <span class="node">사용자 실측</span><span class="arrow">›</span>
+      <span class="node">검증된 사실</span><span class="arrow">›</span>
+      <span class="node">CAD 피처</span><span class="arrow">›</span>
+      <span class="node out">IPT</span>
+    </div>
+
+    <p class="forbidden">금지되는 흐름 &nbsp;<code>사진 → 치수 추측 → IPT</code></p>
+  </section>
+
+  <!-- 2. 워크플로우 -->
+  <section>
+    <h2><span class="num">2</span>워크플로우</h2>
+    <p class="intro">Claude Code에서 <code>/inventor-photo-to-ipt</code> 스킬을 호출한 뒤 아래 순서로 진행합니다.
+      역할 표시 — <span class="role user">사용자</span> <span class="role claude">Claude</span>
+      <span class="role sys">시스템</span> <span class="role inv">Inventor</span><br>
+      <span style="color:var(--ink-faint)">Phase E~I(검증·플랜·빌드·검증·리포트)는 CLI 대신
+      <b>GUI 앱</b>에서도 실행할 수 있습니다 — §8 참고.</span></p>
+
+    <ol class="rail">
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase A</span>
+          <span class="step-title">이미지 입력</span>
+          <span class="role user">사용자</span>
+        </div>
+        <p>부품 사진 1장 이상을 Claude Code 채팅에 드래그·붙여넣기·경로로 첨부하고
+          <code>이 부품을 Inventor 2027 .ipt로 만들어줘</code> 라고 요청합니다.
+          가능하면 전면/후면/좌/우/상단을 함께 제공합니다. 이 단계에서 Inventor는 실행하지 않습니다.</p>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase B</span>
+          <span class="step-title">구조 분석</span>
+          <span class="role claude">Claude</span>
+        </div>
+        <p>이미지에서 구조만 추출합니다 — 부품 유형 가설, 보이는 면, 원·구멍·슬롯,
+          축, 대칭, 반복 패턴, 기준면 후보, 가림/모호 영역, 관찰별 신뢰도.
+          시각 피처에 안정적인 ID(<code>VF-HOLE-001</code> 등)를 부여합니다. mm·도 값은 산출하지 않습니다.</p>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase C</span>
+          <span class="step-title">실측 요청 생성</span>
+          <span class="role claude">Claude</span>
+        </div>
+        <p>필요한 치수마다 항목을 만들어
+          <code>input/&lt;part&gt;/measurement-request.json</code> (모든 <code>value</code>는 <code>null</code>) 과
+          <code>input/&lt;part&gt;/feature-intent.json</code> (파라미터↔측정 ID, 스케치 평면, 피처 순서)을 작성하고
+          채팅에도 JSON을 보여줍니다.</p>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase D</span>
+          <span class="step-title">실측값 입력</span>
+          <span class="role user">사용자</span>
+        </div>
+        <p>부품을 실제로 측정합니다(캘리퍼스·뎁스게이지·각도기·R게이지).
+          각 <code>null</code>을 측정한 숫자로 바꾸고 <code>unit</code>은 그대로 둡니다 →
+          <code>input/&lt;part&gt;/measurement-input.json</code> (붙여넣기 또는 파일 경로).</p>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase E</span>
+          <span class="step-title">검증 — 하드 게이트</span>
+          <span class="role sys">시스템</span>
+        </div>
+        <p>스키마(<code>schemas/measurement.schema.json</code>) → 지오메트리 일관성 순으로 검사합니다.
+          필수값 누락, 음수/0 두께·깊이, 구멍 직경 ≥ 면 폭, 몸체 밖 구멍 중심, 불가능한 필렛/챔퍼,
+          패턴 개수 &lt; 1, 패턴 각도 (0, 360] 벗어남, 중복 ID, 단위/타입 불일치 등.
+          실패 시 <code>MEASUREMENT_VALIDATION_FAILED</code> 와 문제 ID를 반환하고 <b>중단</b>합니다.</p>
+        <div class="cmd">
+          <button class="copy" type="button">복사</button>
+          <pre><code>python scripts/validate_measurements.py input/&lt;part&gt;/measurement-input.json --report output/&lt;part&gt;/validation-report.json</code></pre>
+        </div>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase F</span>
+          <span class="step-title">피처 플랜</span>
+          <span class="role sys">시스템</span>
+        </div>
+        <p>검증된 JSON + 구조 의도에서 결정적 <code>output/&lt;part&gt;/cad-plan.json</code> (+ <code>cad-plan.md</code>)를 생성합니다.
+          모든 파라미터가 measurement ID에 연결되고, 피처는 위상 정렬되며, provenance(sha256)가 기록됩니다.
+          미지원 피처(<code>shell·thread·work_plane·work_axis</code>)와 결합되지 않은 치수는 거부합니다.</p>
+        <div class="cmd">
+          <button class="copy" type="button">복사</button>
+          <pre><code>python scripts/plan_cad.py --measurements input/&lt;part&gt;/measurement-input.json --intent input/&lt;part&gt;/feature-intent.json --out-dir output/&lt;part&gt;</code></pre>
+        </div>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase G</span>
+          <span class="step-title">Inventor 빌드</span>
+          <span class="role inv">Inventor</span>
+        </div>
+        <p>Inventor 2027에 연결(없으면 실행, <code>Visible = true</code>)하고
+          <code>p_&lt;name&gt;</code> 사용자 파라미터를 단위 표현식으로 생성한 뒤
+          스케치·치수 구속·피처를 플랜 순서대로 만들고 <code>Document.Update()</code> →
+          <code>output/&lt;part&gt;/&lt;part&gt;.ipt</code> 로 저장합니다.
+          <b>Windows PowerShell 5.1(STA)</b> 에서 실행해야 합니다.</p>
+        <div class="cmd">
+          <button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/inventor_build.ps1 -PlanPath output/&lt;part&gt;/cad-plan.json</code></pre>
+        </div>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase H</span>
+          <span class="step-title">검증</span>
+          <span class="role sys">시스템</span>
+        </div>
+        <p><code>.ipt</code>를 다시 열어 확인합니다 — 파일 존재, 확장자 <code>.ipt</code>, 크기 &gt; 0,
+          <code>kPartDocumentObject</code>, 솔리드 바디 ≥ 1, 피처 수, 상태 오류 없음.
+          <code>build_report</code> 의 <code>Result: PASS</code> 일 때만 성공으로 봅니다.</p>
+        <div class="cmd">
+          <button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/verify_ipt.ps1 -IptPath output/&lt;part&gt;/&lt;part&gt;.ipt -ExpectedFeatures &lt;n&gt;</code></pre>
+        </div>
+      </li>
+
+      <li>
+        <div class="step-head">
+          <span class="phase-tag">Phase I</span>
+          <span class="step-title">리포트</span>
+          <span class="role sys">시스템</span>
+        </div>
+        <p><code>output/&lt;part&gt;/build-report.md</code> — 입력·provenance, 검증 결과,
+          파라미터 맵(<code>M-ID → p_name → 치수 → 피처</code>), 피처 목록, Inventor 결과, 경고, PASS/FAIL 과
+          <code>output/&lt;part&gt;/build-log.txt</code> (단계별 <code>[INFO]/[WARN]/[ERROR]</code>, 예외 원문)가 생성됩니다.</p>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 3. 명령어 요약 -->
+  <section>
+    <h2><span class="num">3</span>명령어 요약</h2>
+    <p class="intro">모든 <code>&lt;part&gt;</code> 는 부품 이름으로 바꿉니다. Python 단계는 아무 셸에서,
+      Inventor(<code>.ps1</code>) 단계는 <b>Windows PowerShell 5.1</b>(<code>powershell.exe</code>)에서 실행합니다.</p>
+
+    <div class="cmdref">
+      <div class="row">
+        <div class="label">스킬 호출 <span class="when">Claude Code 채팅에서</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>/inventor-photo-to-ipt</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">환경 점검 <span class="when">Inventor / COM / interop 확인</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -File scripts/detect_inventor.ps1</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">측정값 검증 <span class="when">Phase E · 스키마 + 지오메트리</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>python scripts/validate_measurements.py input/&lt;part&gt;/measurement-input.json --report output/&lt;part&gt;/validation-report.json</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">피처 플랜 생성 <span class="when">Phase F · cad-plan.json / .md</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>python scripts/plan_cad.py --measurements input/&lt;part&gt;/measurement-input.json --intent input/&lt;part&gt;/feature-intent.json --out-dir output/&lt;part&gt;</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">Inventor 빌드 <span class="when">Phase G · .ipt 생성 + 검증 + 리포트</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/inventor_build.ps1 -PlanPath output/&lt;part&gt;/cad-plan.json</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">개별 .ipt 검증 <span class="when">Phase H · 단독 실행</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/verify_ipt.ps1 -IptPath output/&lt;part&gt;/&lt;part&gt;.ipt -ExpectedFeatures &lt;n&gt;</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">단위 테스트 <span class="when">Inventor 불필요 · 33건</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>python tests/run_tests.py</code></pre></div>
+      </div>
+
+      <div class="row">
+        <div class="label">통합 스모크 <span class="when">골든 픽스처 simple_plate 를 .ipt까지 E2E</span></div>
+        <div class="cmd"><button class="copy" type="button">복사</button>
+          <pre><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/integration_smoke.ps1</code></pre></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 완료 조건 -->
+  <section>
+    <h2><span class="num">4</span>완료 조건 (PASS)</h2>
+    <p class="intro">아래를 모두 만족하고 <code>build-report.md</code> 에 기록될 때만 <b>PASS</b> 입니다.
+      0바이트·파일 없음·바디 없음·Update 오류는 <b>FAIL</b> 입니다.</p>
+    <ul class="check">
+      <li><b>스키마 검증</b> 통과 (measurement.schema.json)</li>
+      <li><b>지오메트리 일관성</b> 검증 통과</li>
+      <li><b>cad-plan.json</b> 스키마 + 참조 검증 통과 (DAG, 결합된 파라미터)</li>
+      <li><b>Inventor 2027 연결</b> — SoftwareVersion major = 31</li>
+      <li>모든 계획 피처 생성 + <b>Update() 미해결 오류 0</b></li>
+      <li><code>output/&lt;part&gt;/&lt;part&gt;.ipt</code> 파일이 디스크에 <b>존재</b></li>
+      <li>확장자 <code>.ipt</code>, 파일 크기 <b>&gt; 0</b></li>
+      <li>재오픈 시 문서 유형 <b>kPartDocumentObject</b></li>
+      <li>솔리드 바디 <b>≥ 1</b></li>
+      <li>재오픈 피처 수가 계획과 일치, 상태 이상 피처 없음</li>
+    </ul>
+  </section>
+
+  <!-- 5. 지원 범위 -->
+  <section>
+    <h2><span class="num">5</span>지원 범위</h2>
+    <p class="intro">MVP는 <b>단일 솔리드 기계 부품</b> — plate, bracket, spacer, flange, block,
+      회전체(shaft), 단순 하우징·마운트, 볼트 패턴 plate/flange.</p>
+
+    <div class="cols">
+      <div class="card ok">
+        <h4>구현 · 테스트 완료 피처</h4>
+        <ul>
+          <li>base_extrude · extrude_add · extrude_cut</li>
+          <li>revolve</li>
+          <li>hole · slot</li>
+          <li>fillet · chamfer</li>
+          <li>mirror</li>
+          <li>rectangular_pattern · circular_pattern</li>
+        </ul>
+      </div>
+      <div class="card defer">
+        <h4>보류 — 명시적 &ldquo;미지원&rdquo; 오류</h4>
+        <ul>
+          <li>shell</li>
+          <li>thread</li>
+          <li>work_plane</li>
+          <li>work_axis</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card no" style="margin-top:16px;">
+      <h4>범위 밖 — 도면·스펙을 요청 (근사 모델 금지)</h4>
+      <ul>
+        <li>자유곡면 · 유기적 형상 · 주물의 불규칙 표면</li>
+        <li>사진에 보이지 않는 내부 구조</li>
+        <li>스펙 없는 기어 치형 · 표준 없는 나사산</li>
+        <li>공차가 지정되지 않은 정밀 끼워맞춤 결정</li>
+      </ul>
+    </div>
+
+    <div class="stops">
+      <h4>빌드 중지 조건 (SAFE-001)</h4>
+      <p>필수 측정값 null · topology에 영향을 주는 모호한 지오메트리 · Inventor 미설치 · COM 연결 실패 ·
+        미지원 피처 요청 · 잘못된 CAD 플랜 · 일관성 없는 측정값 · 출력 경로 쓰기 불가 ·
+        파트 템플릿 없음 · Inventor 리빌드 오류 · 저장 실패.
+        → 구조화된 사유와 문제 ID를 반환하고 중단합니다.</p>
+    </div>
+  </section>
+
+  <!-- 6. 산출물 -->
+  <section>
+    <h2><span class="num">6</span>산출물 파일 (부품별)</h2>
+    <div class="files">
+<pre>input/&lt;part&gt;/
+  measurement-request.json   <span class="c"># 생성 · 모든 value: null</span>
+  feature-intent.json        <span class="c"># 생성 · 구조(파라미터↔측정 ID, 피처 순서)</span>
+  measurement-input.json     <span class="c"># 사용자가 값 입력</span>
+output/&lt;part&gt;/
+  validation-report.json     <span class="c"># 스키마 + 지오메트리 검증 결과</span>
+  cad-plan.json              <span class="c"># 결정적 피처 플랜 (스키마 유효)</span>
+  cad-plan.md                <span class="c"># 사람이 읽는 피처 순서 + 파라미터 맵</span>
+  &lt;part&gt;.ipt                 <span class="c"># 모델</span>
+  build-log.txt              <span class="c"># 단계별 구조화 로그</span>
+  build-report.md            <span class="c"># PASS/FAIL · 파라미터 맵 · Inventor 결과</span></pre>
+    </div>
+
+    <table class="mini">
+      <thead><tr><th>파라미터 맵 형식</th><th>예 (simple_plate)</th></tr></thead>
+      <tbody>
+        <tr><td><code>M-ID → p_&lt;name&gt; → 치수 → 피처 ID</code></td>
+            <td><code>M001 → p_overall_width → S1 폭 → F001</code></td></tr>
+        <tr><td></td><td><code>M004 → p_hole_dia → F002 구멍 직경 → F002</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 7. 먼저 확인 -->
+  <section>
+    <h2><span class="num">7</span>먼저 해볼 것 — 골든 픽스처</h2>
+    <p class="intro">실제 사진 작업 전에, 합성 픽스처 <code>tests/fixtures/simple_plate</code> 로
+      파이프라인 전체가 검증된 <code>.ipt</code> 까지 도달하는지 확인합니다. 픽스처 치수는 테스트 데이터이며
+      사진에서 추정한 값과 혼동하지 않습니다.</p>
+    <div class="cmd">
+      <button class="copy" type="button">복사</button>
+      <pre><code>python tests/run_tests.py
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/integration_smoke.ps1</code></pre>
+    </div>
+    <p style="margin-top:12px;color:var(--ink-soft)">기대 결과 — 단위 테스트 <code>Ran 41 tests … OK</code>,
+      통합 스모크 <code>INTEGRATION: PASS</code> (100×60×6 mm 판 + Ø8 관통 구멍 + R5 필렛,
+      솔리드 바디 1, 피처 3).</p>
+    <p style="margin-top:8px;color:var(--ink-soft)">스모크는 산출물을 <b>남깁니다</b> —
+      <code>output/simple_plate/simple_plate.ipt</code> 를 열어 확인하세요.
+      뒤에서 정리하려면 <code>-Clean</code> 을 붙입니다(CI용).</p>
+  </section>
+
+  <!-- 8. GUI 앱 -->
+  <section>
+    <h2><span class="num">8</span>GUI 앱으로 반복하기 (Photo-to-IPT Builder)</h2>
+    <p class="intro">Claude Code로 <b>사진 분석을 1회</b> 마친 뒤(§2 Phase A~C),
+      결정적 부분(<b>Phase E~I</b> — 검증 → 플랜 → Inventor 빌드 → 검증 → 리포트)은
+      터미널 대신 데스크톱 앱에서 반복할 수 있습니다. 치수를 바꿔가며 재빌드하기 좋습니다.
+      앱은 사진을 분석하지 않으며 API 키가 필요 없습니다 — Claude Code가 만든
+      <code>input/&lt;part&gt;/</code> 폴더(<code>measurement-request.json</code> +
+      <code>feature-intent.json</code>)를 그대로 사용합니다.</p>
+
+    <div class="cols">
+      <div class="card ok">
+        <h4>앱 흐름</h4>
+        <ul>
+          <li><code>작업 폴더 선택</code> → <code>…/input/&lt;part&gt;/</code></li>
+          <li>측정 테이블의 <b>값</b> 컬럼만 입력</li>
+          <li><code>검증</code> → <code>플랜 생성</code> → <code>Inventor 빌드</code></li>
+          <li><code>.ipt 열기</code> / <code>리포트 열기</code></li>
+          <li>산출물: <code>&lt;작업폴더&gt;/output/&lt;part&gt;/</code></li>
+        </ul>
+      </div>
+      <div class="card defer">
+        <h4>게이트 / 상태</h4>
+        <ul>
+          <li>우측 상단 칩: <b>Inventor 감지</b> 녹/적</li>
+          <li>플랜 버튼: 검증 통과 + <code>feature-intent.json</code> 존재</li>
+          <li>빌드 버튼: 플랜 생성 + Inventor 감지</li>
+          <li>검증 실패 행은 빨강, <code>취소</code>로 빌드 중단</li>
+          <li><code>feature-intent.json</code> 없으면 → Claude Code 안내</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>소스에서 실행</h3>
+    <div class="cmd">
+      <button class="copy" type="button">복사</button>
+      <pre><code>pip install -r requirements-dev.txt
+python -m app.ipt_builder</code></pre>
+    </div>
+
+    <h3>배포용 .exe 빌드</h3>
+    <div class="cmd">
+      <button class="copy" type="button">복사</button>
+      <pre><code>powershell -File build/build.ps1            # --onedir (권장)  →  build/dist/Photo-to-IPT Builder/
+powershell -File build/build.ps1 -OneFile   # 단일 .exe (더 큼, 백신 오탐 ↑)</code></pre>
+    </div>
+    <p style="margin-top:12px;color:var(--ink-soft)"><code>build/dist/Photo-to-IPT Builder/</code> 폴더 전체(약 115 MB)를
+      압축해 배포합니다. 대상 PC마다 <b>Inventor 2027</b> 이 필요하며, Inventor 경로는 실행 시
+      레지스트리에서 자동 해석됩니다. 스펙: <code>docs/spec/08-gui-app.md</code> +
+      수동 체크리스트.</p>
+
+    <h3>번들 자체 점검 (창 없이)</h3>
+    <div class="cmd">
+      <button class="copy" type="button">복사</button>
+      <pre><code>"Photo-to-IPT Builder.exe" --selftest         # import·번들·검증·플랜  →  SELFTEST: PASS
+"Photo-to-IPT Builder.exe" --selftest-build   # + Inventor 빌드까지 실제로 수행</code></pre>
+    </div>
+    <p style="margin-top:12px;color:var(--ink-soft)">배포한 PC에서 exe가 실제로 동작하는지 한 줄로 확인합니다.
+      GUI 실행이 모달 다이얼로그 뒤에 숨기는 패키징 오류까지 잡아냅니다.</p>
+  </section>
+
+  <footer class="foot">
+    <p>설계 근거 (gstack /office-hours): <code>~/.gstack/projects/inventor_auto/20260901-design-photo-to-ipt.md</code></p>
+    <p>엔지니어링 스펙: <code>docs/spec/</code> (00–08 + <code>TRACEABILITY.md</code>) · 프로젝트 규칙: <code>CLAUDE.md</code></p>
+    <p>스킬: <code>.claude/skills/inventor-photo-to-ipt/</code> · 에이전트: <code>.claude/agents/inventor-cad-engineer.md</code> · GUI: <code>app/ipt_builder.py</code></p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    document.querySelectorAll('.cmd').forEach(function (block) {
+      var btn = block.querySelector('.copy');
+      var code = block.querySelector('code');
+      if (!btn || !code) return;
+      btn.addEventListener('click', function () {
+        var text = code.innerText;
+        var done = function () {
+          var prev = btn.textContent;
+          btn.textContent = '복사됨';
+          setTimeout(function () { btn.textContent = prev; }, 1500);
+        };
+        try {
+          navigator.clipboard.writeText(text).then(done, function () { fallback(text, done); });
+        } catch (e) {
+          fallback(text, done);
+        }
+      });
+    });
+    function fallback(text, done) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) { /* no-op */ }
+      document.body.removeChild(ta);
+    }
+  })();
+</script>
+
+</body>
+</html>

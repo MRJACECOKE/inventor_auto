@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inventor-auto/schemas/measurement.schema.json",
+  "title": "Photo-to-IPT Measurement Input",
+  "description": "Single source of truth for every real dimension of the part. Photos never contribute values here.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "part", "source_images", "reference", "measurements"],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "part": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "units"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$", "minLength": 1 },
+        "description": { "type": "string" },
+        "units": { "type": "string", "enum": ["mm", "cm", "in"] }
+      }
+    },
+    "source_images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^IMG-[0-9]{3,}$" },
+          "path": { "type": "string" },
+          "view": {
+            "type": "string",
+            "enum": ["front", "rear", "left", "right", "top", "bottom", "perspective", "unknown"]
+          }
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin_definition", "primary_plane"],
+      "properties": {
+        "origin_definition": { "type": "string", "minLength": 1 },
+        "primary_plane": { "type": "string", "enum": ["XY", "XZ", "YZ"] },
+        "symmetry": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "enum": ["mirror", "rotational"] },
+              "plane": { "type": "string", "enum": ["XY", "XZ", "YZ"] },
+              "axis": { "type": "string", "enum": ["X", "Y", "Z"] },
+              "count": { "type": "integer", "minimum": 2 },
+              "confidence_note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "measurements": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/measurement" }
+    },
+    "derived": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/derived" }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "note"],
+        "properties": {
+          "kind": { "type": "string", "enum": ["equal", "parallel", "perpendicular", "concentric", "coincident", "note"] },
+          "note": { "type": "string" },
+          "measurement_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "name": { "type": ["string", "null"] } }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "measured_by": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] },
+        "measured_date": { "type": ["string", "null"] }
+      }
+    }
+  },
+  "$defs": {
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "value", "unit", "type", "required", "measurement_instruction"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^M[0-9]{3,}$" },
+        "name": { "type": "string", "pattern": "^[a-z0-9_]+$", "minLength": 1 },
+        "value": { "type": ["number", "null"] },
+        "unit": { "type": "string", "enum": ["mm", "cm", "in", "deg", "count"] },
+        "type": { "type": "string", "enum": ["length", "angle", "count"] },
+        "required": { "type": "boolean" },
+        "measurement_instruction": { "type": "string", "minLength": 1 },
+        "related_visual_feature": { "type": "string" },
+        "expected_tool": {
+          "type": "string",
+          "enum": ["calipers", "micrometer", "depth_gauge", "rule", "protractor", "radius_gauge", "thread_gauge", "other"]
+        }
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "type", "unit", "derivation"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^D[0-9]{3,}$" },
+        "name": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+        "type": { "type": "string", "enum": ["length", "angle", "count"] },
+        "unit": { "type": "string", "enum": ["mm", "cm", "in", "deg", "count"] },
+        "derivation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["formula", "source_measurement_ids"],
+          "properties": {
+            "formula": { "type": "string", "minLength": 1 },
+            "source_measurement_ids": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "pattern": "^[MD][0-9]{3,}$" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

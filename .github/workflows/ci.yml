@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.7"
+
+      - name: Determinism check (cad-plan goldens)
+        shell: pwsh
+        run: python scripts/regen_golden.py --check
+
+      - name: Non-Inventor CI (tests + determinism + GUI smoke + PyInstaller build + --selftest)
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File ci/run_ci.ps1
+
+      - name: Upload built app
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Photo-to-IPT-Builder
+          path: build/dist/Photo-to-IPT Builder/
+          if-no-files-found: warn
+
+# The Inventor 2027 end-to-end checks are NOT run in CI (no Inventor on the
+# runner). Run these on a machine with Inventor 2027 installed:
+#   powershell -File tests/run_ps_tests.ps1            # test_inventor_env + integration_smoke
+#   python -m app.ipt_builder --selftest-build         # builds + verifies a real .ipt

@@ -1,0 +1,109 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>엔지니어링 문서 (쉬운 설명본) — L자 코스</title><style>
+/* Light theme only - dark mode intentionally disabled. Font: Malgun Gothic. */
+:root{
+  --bg:#ffffff; --fg:#1c2024; --muted:#5b6570; --border:#d7dde3;
+  --accent:#0f6fd6; --code-bg:#f4f6f8; --th-bg:#eef2f6; --quote-bg:#f6f8fa;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:#ffffff;}
+body{background:var(--bg);color:var(--fg);margin:0;
+  font:16px/1.65 "Malgun Gothic","맑은 고딕",Dotum,"돋움",sans-serif;}
+.wrap{max-width:960px;margin:0 auto;padding:48px 24px 96px;}
+h1,h2,h3,h4{line-height:1.3;font-weight:700;margin:1.8em 0 .6em;}
+h1{font-size:1.9rem;margin-top:0;border-bottom:2px solid var(--border);padding-bottom:.3em;}
+h2{font-size:1.4rem;border-bottom:1px solid var(--border);padding-bottom:.25em;}
+h3{font-size:1.15rem;} h4{font-size:1rem;color:var(--muted);}
+p{margin:.7em 0;} a{color:var(--accent);}
+hr{border:0;border-top:1px solid var(--border);margin:2em 0;}
+code{background:var(--code-bg);padding:.12em .38em;border-radius:4px;
+  font:0.88em/1.5 "Malgun Gothic",Consolas,"Courier New",monospace;}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;
+  padding:14px 16px;overflow-x:auto;}
+pre code{background:none;padding:0;font-size:0.84rem;
+  font-family:Consolas,"D2Coding","Malgun Gothic","Courier New",monospace;}
+blockquote{margin:1em 0;padding:.6em 1em;background:var(--quote-bg);
+  border-left:3px solid var(--accent);color:var(--muted);border-radius:0 6px 6px 0;}
+blockquote p{margin:.3em 0;}
+ul,ol{padding-left:1.5em;} li{margin:.3em 0;}
+.tablewrap{overflow-x:auto;margin:1em 0;}
+table{border-collapse:collapse;width:100%;font-size:.92rem;}
+th,td{border:1px solid var(--border);padding:7px 11px;text-align:left;vertical-align:top;}
+th{background:var(--th-bg);font-weight:600;}
+tr:nth-child(even) td{background:#f7f9fb;}
+.docnav{font-size:.9rem;margin-bottom:2.5em;padding-bottom:1em;border-bottom:1px solid var(--border);}
+.docnav a{margin-right:1.2em;}
+figure.flow{margin:1.4em 0;padding:0;}
+figure.flow svg{width:100%;height:auto;max-width:760px;display:block;
+  border:1px solid var(--border);border-radius:8px;background:#fff;}
+figure.flow figcaption{font-size:.85rem;color:var(--muted);margin-top:.5em;}
+@media print{.docnav{display:none}body{font-size:11pt}.wrap{max-width:none}
+  figure.flow svg{border:1px solid #999}}
+</style></head><body><div class="wrap"><div class="docnav"><a href="index.html">← 목차</a><a href="01-HANDOFF.html">인수인계</a><a href="02-ENGINEERING.html">엔지니어링</a><a href="02-ENGINEERING_ver2.html">엔지니어링(쉬움)</a><a href="03-SPECIFICATION.html">명세서</a></div><h1>엔지니어링 문서 (쉬운 설명본, _ver2) — L자 코스 만들기</h1>
+<blockquote><p>이 문서는 <code>02-ENGINEERING.md</code> 를 전문용어를 최대한 빼고 다시 쓴 것입니다.<br>정확한 원문은 그대로 남아 있습니다 (<code>02-ENGINEERING.md</code>).<br>범위: <code>l_course_big</code>, <code>l_course_small</code>, <code>l_corridor_course</code>,<br><code>l_corridor_course_ver2</code>. <code>l_course_combined</code> 제외.</p></blockquote>
+<hr>
+<h2>1. 한마디로 무엇을 했나</h2>
+<p><code>corner_line/</code> 의 사진 2장(90도로 꺾인 실내 복도)을 보고, 사용자가 줄자로 잰 실제 치수를<br>받아서, 로봇 시뮬레이터(Isaac Sim)에서 쓸 수 있는 <strong>ㄱ자(L자) 복도 3D 모델</strong>을<br>Autodesk Inventor로 만들었습니다.</p>
+<p>지킨 약속 네 가지:</p>
+<ul><li>사진에서는 <strong>생김새만</strong> 봅니다 — 벽이 어디 있고, 어디서 꺾이고, 어디가 뚫려 있는지. 원근 때문에 부정확하니 <strong>길이·각도 숫자는 사진에서 재지 않습니다.</strong></li><li>모든 실제 숫자는 사용자가 채운 <strong>측정 파일 하나</strong>에서만 옵니다. 그게 유일한 기준입니다.</li><li>숫자가 상식적으로 말이 되는지 <strong>먼저 검사</strong>하고, 통과해야만 Inventor를 켭니다.</li><li>다 만든 뒤 파일을 <strong>다시 열어서</strong> 가로·세로·높이와 부피를 손계산값과 대조해 확인합니다.</li></ul>
+<hr>
+<h2>2. 작업 순서 (9단계, A~I)</h2>
+<figure class="flow"><svg viewBox="0 0 760 812" xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic, sans-serif" role="img" aria-label="Photo-to-IPT 파이프라인 플로우 (Phase A-I)"><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#334"/></marker><marker id="ahr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c23"/></marker><marker id="aho" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#e58a00"/></marker></defs><line x1="270.0" y1="84" x2="270.0" y2="112" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="172" x2="270.0" y2="200" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="260" x2="270.0" y2="288" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="348" x2="270.0" y2="376" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="436" x2="270.0" y2="464" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="524" x2="270.0" y2="552" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="612" x2="270.0" y2="640" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><line x1="270.0" y1="700" x2="270.0" y2="728" stroke="#334" stroke-width="1.6" marker-end="url(#ah)"/><rect x="44" y="26" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="55.0" r="15" fill="#1c2024"/><text x="71" y="60.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">A</text><text x="96" y="49" font-size="14.5" font-weight="700" fill="#1c2024">이미지 인테이크</text><text x="96" y="68" font-size="11" fill="#55606b">사진 경로 수령 · Inventor 미기동</text><rect x="44" y="114" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="143.0" r="15" fill="#1c2024"/><text x="71" y="148.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">B</text><text x="96" y="137" font-size="14.5" font-weight="700" fill="#1c2024">시각 구조 분석</text><text x="96" y="156" font-size="11" fill="#55606b">IMAGE ANALYSIS 블록 · mm/deg 없음</text><rect x="44" y="202" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="231.0" r="15" fill="#1c2024"/><text x="71" y="236.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">C</text><text x="96" y="225" font-size="14.5" font-weight="700" fill="#1c2024">측정 요청 생성</text><text x="96" y="244" font-size="11" fill="#55606b">measurement-request.json + feature-intent.json</text><rect x="44" y="290" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="319.0" r="15" fill="#1c2024"/><text x="71" y="324.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">D</text><text x="96" y="313" font-size="14.5" font-weight="700" fill="#1c2024">사용자 실측 입력</text><text x="96" y="332" font-size="11" fill="#55606b">measurement-input.json  (단일 진실원천)</text><rect x="44" y="378" width="452" height="58" rx="9" fill="#fdeef0" stroke="#e2a9b2" stroke-width="1.4"/><circle cx="71" cy="407.0" r="15" fill="#1c2024"/><text x="71" y="412.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">E</text><text x="96" y="401" font-size="14.5" font-weight="700" fill="#1c2024">검증 게이트</text><text x="96" y="420" font-size="11" fill="#55606b">validate_measurements.py · 스키마 + 기하 일관성</text><rect x="44" y="466" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="495.0" r="15" fill="#1c2024"/><text x="71" y="500.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">F</text><text x="96" y="489" font-size="14.5" font-weight="700" fill="#1c2024">피처 계획</text><text x="96" y="508" font-size="11" fill="#55606b">plan_cad.py → cad-plan.json (결정론적, sha256)</text><rect x="44" y="554" width="452" height="58" rx="9" fill="#eef7ef" stroke="#a9cdb0" stroke-width="1.4"/><circle cx="71" cy="583.0" r="15" fill="#1c2024"/><text x="71" y="588.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">G</text><text x="96" y="577" font-size="14.5" font-weight="700" fill="#1c2024">Inventor 빌드</text><text x="96" y="596" font-size="11" fill="#55606b">inventor_build.ps1 · PowerShell 5.1 STA · COM</text><rect x="44" y="642" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="671.0" r="15" fill="#1c2024"/><text x="71" y="676.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">H</text><text x="96" y="665" font-size="14.5" font-weight="700" fill="#1c2024">검증</text><text x="96" y="684" font-size="11" fill="#55606b">verify_ipt.ps1 + 형상 확인 (bbox · 체적)</text><rect x="44" y="730" width="452" height="58" rx="9" fill="#eef4fb" stroke="#9db9d6" stroke-width="1.4"/><circle cx="71" cy="759.0" r="15" fill="#1c2024"/><text x="71" y="764.0" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">I</text><text x="96" y="753" font-size="14.5" font-weight="700" fill="#1c2024">리포트</text><text x="96" y="772" font-size="11" fill="#55606b">build-report.md + build-log.txt</text><path d="M496,407.0 H562 V319.0 H498" fill="none" stroke="#c23" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ahr)"/><text x="568" y="363.0" font-size="10.5" fill="#c23" writing-mode="tb">VALIDATION_FAILED → 수정</text><path d="M496,671.0 H526 V495.0 H498" fill="none" stroke="#e58a00" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#aho)"/><text x="532" y="583.0" font-size="10.5" fill="#e58a00" writing-mode="tb">형상/건강도 불량 → 재계획</text></svg><figcaption>그림 1. Photo-to-IPT 파이프라인 (Phase A–I). 실선 = 정상 진행, 빨강 점선 = 검증 실패 시 사용자 실측 수정으로 복귀(Inventor 미실행), 주황 점선 = 빌드/형상 검증 실패 시 피처 계획으로 복귀.</figcaption></figure>
+<p>말로 풀면:</p>
+<ol><li><strong>A · 사진 받기</strong> — 사진 파일을 받습니다. 아직 Inventor는 켜지 않습니다.</li><li><strong>B · 생김새 분석</strong> — 사진에서 코너 위치, 벽 면, 대칭, 뚫린 곳을 글로 적습니다. 숫자는 안 적습니다.</li><li><strong>C · 측정 요청서 만들기</strong> — &quot;이 모델을 만들려면 이런 길이들이 필요합니다&quot;라는 <strong>빈 양식</strong>을 만듭니다.</li><li><strong>D · 사용자가 숫자 채우기</strong> — 현장에서 잰 값을 양식에 적어 돌려줍니다. 이 파일이 기준 파일입니다.</li><li><strong>E · 숫자 검사 (통과 못 하면 여기서 멈춤)</strong> — 형식이 맞는지, 음수가 없는지,</li></ol>
+<p>   &quot;통로 폭 + 벽 두께 2개&quot;가 다리 길이보다 짧은지 같은 상식 조건을 확인합니다.<br>   하나라도 틀리면 <strong>어디가 틀렸는지 알려주고 멈춥니다. Inventor는 켜지지 않습니다.</strong></p>
+<ol><li><strong>F · 만들 순서 정하기</strong> — 어떤 치수가 어떤 부분을 결정하는지 연결하고, 도형을 만들 순서를</li></ol>
+<p>   확정한 <strong>설계표</strong>를 만듭니다. 같은 입력이면 항상 똑같은 설계표가 나옵니다.</p>
+<ol><li><strong>G · Inventor로 조립</strong> — 설계표대로 Inventor를 <strong>자동 조종</strong>해서 도형을 쌓고 파일로 저장합니다.</li><li><strong>H · 결과 확인</strong> — 저장된 파일을 새로 다시 열어서: 파일이 진짜 있는지, 덩어리(부품)가</li></ol>
+<p>   1개 이상인지, 고장난 부분이 없는지 보고, 가로·세로·높이와 부피가 손계산과 맞는지 확인합니다.</p>
+<ol><li><strong>I · 보고서</strong> — 무엇을 어떤 값으로 만들었는지, 통과/실패를 정리한 문서를 씁니다.</li></ol>
+<p><strong>두 개의 되돌아가는 화살표</strong> (다이어그램의 점선):<br>빨간 점선 = 5번 검사에서 실패하면 4번(숫자 다시 입력)으로 돌아갑니다.<br>주황 점선 = 8번 확인에서 형상이 뭉개졌거나 고장난 도형이 있으면 6번(만들 순서 다시)으로 돌아갑니다.</p>
+<hr>
+<h2>3. 왜 프로그램이 두 종류인가</h2>
+<div class="tablewrap"><table><thead><tr><th>하는 일</th><th>쓰는 프로그램</th><th>이유</th></tr></thead><tbody><tr><td>숫자 검사, 설계표 만들기</td><td><strong>파이썬</strong></td><td>계산이 간단하고 추가 설치가 필요 없음</td></tr><tr><td>Inventor 조종, 결과 파일 확인</td><td><strong>윈도우 파워셸 (옛 버전 5.1)</strong></td><td>Inventor를 프로그램으로 조종하려면 이게 무설치로 되는 유일한 길. 최신 파워셸(7)로 하면 일부 명령이 조용히 실패해서 못 씀. 스크립트가 옛 버전이 아니면 아예 실행을 거부함</td></tr></tbody></table></div>
+<p>Inventor 버전은 2027.1 을 확인했습니다. 2027 이 아니면 스크립트가 멈춥니다.</p>
+<hr>
+<h2>4. Inventor 조종 도구가 할 수 있는 것 / 없는 것</h2>
+<p>이 자동 조종 도구는 아직 기능이 제한적입니다. 그래서 L자를 &quot;정공법&quot;으로 못 만들고<br>돌아가는 방법을 씁니다.</p>
+<p><strong>안 되는 것:</strong></p>
+<ul><li>사각형은 <strong>항상 한 귀퉁이가 원점(0,0)에 붙은</strong> 상태로만 그립니다. 원하는 위치에 자유롭게 못 놓습니다.</li><li>여러 점을 잇는 자유 곡선(폴리라인)으로 단면을 못 만듭니다.</li><li>복제(패턴)는 가로 방향(또는 가로+세로 동시)만 됩니다. 세로만·높이 방향은 안 됩니다.</li><li>모서리 둥글리기는 &quot;바깥 세로 모서리 전체&quot;만 됩니다.</li></ul>
+<p><strong>그래서 L자 복도는 이렇게 만듭니다</strong> (레고 비유):<br>큰 덩어리를 만들고 → 안쪽 필요 없는 부분을 원점 기준 블록으로 파내고 → 바닥판과 바깥 판을 덧댄다.<br>아래 §5 의 8단계가 그것입니다.</p>
+<hr>
+<h2>5. L자 복도를 만드는 8단계 도형 작업</h2>
+<p><strong>좌표:</strong> 원점 O = L자의 바깥쪽 뾰족한 코너, 바닥 높이. X축 = 한쪽 다리 방향,<br>Y축 = 다른 다리 방향, Z축 = 위.</p>
+<p><strong>쓰는 값:</strong></p>
+<div class="tablewrap"><table><thead><tr><th>값 이름</th><th>뜻</th></tr></thead><tbody><tr><td><code>lane_width</code></td><td>통로 순폭 (로봇이 지나가는 빈 폭)</td></tr><tr><td><code>wall_thickness</code></td><td>벽 두께 (안쪽·바깥쪽 벽 같은 값)</td></tr><tr><td><code>wall_height</code></td><td>바닥에서 벽 꼭대기까지 높이</td></tr><tr><td><code>floor_thickness</code></td><td>바닥판 두께</td></tr><tr><td><code>seg_a_length</code> / <code>seg_b_length</code></td><td>각 다리의 바깥쪽 길이 (원점 O 기준)</td></tr><tr><td><code>strip_width</code> (자동 계산)</td><td><code>lane_width + wall_thickness × 2</code> — 벽까지 포함한 다리 전체 폭</td></tr><tr><td><code>inner_off</code> (자동 계산)</td><td><code>lane_width + wall_thickness</code> — 원점에서 안쪽 벽까지 거리</td></tr></tbody></table></div>
+<p><strong>8단계:</strong></p>
+<div class="tablewrap"><table><thead><tr><th>단계</th><th>하는 일</th><th>결과</th></tr></thead><tbody><tr><td>1–2</td><td>벽 높이만큼 <strong>속이 꽉 찬 L자 기둥</strong>을 세운다 (다리 A 사각형 + 다리 B 사각형 이어붙임)</td><td>꽉 찬 L</td></tr><tr><td>3–4</td><td>안쪽을 위아래로 <strong>관통해서 잘라낸다</strong> (원점에 붙은 블록 2개로)</td><td>안쪽 벽만 남음 (남은 두께 = <code>wall_thickness</code>)</td></tr><tr><td>5–6</td><td>L자 전체 바닥에 얇은 <strong>바닥판</strong>을 깐다</td><td>바닥 + 안쪽 벽</td></tr><tr><td>7–8</td><td>바깥 모서리(X=0, Y=0)를 따라 <strong>바깥 벽</strong>을 세운다</td><td><strong>완성</strong>: 바닥 + 안쪽벽 + 바깥벽, 그 사이가 통로, 양 끝 뚫림</td></tr></tbody></table></div>
+<p>바닥(5–6)을 바깥벽(7–8)보다 먼저 붙이는 이유: 나중에 붙는 조각이 항상 기존 덩어리와<br>겹쳐 붙어서, 따로 떨어진 조각이 안 생기게 하려고.</p>
+<p><strong>만들 수 있는 조건:</strong> <code>strip_width</code> 가 두 다리 길이보다 짧아야 하고, 바닥판이 벽보다 얇아야<br>합니다. 안 그러면 파낼 자리가 없어져서 그냥 상자가 됩니다.</p>
+<hr>
+<h2>6. 사용자가 부른 길이 → 모델 숫자 (헷갈리기 쉬운 부분)</h2>
+<p>사용자는 다리 길이를 <strong>안쪽 코너(검은 벽 꼭짓점) 기준</strong>으로 잽니다.<br>모델은 <strong>바깥 코너(O) 기준</strong>을 씁니다. 그래서 통로 폭을 더해 줍니다.</p>
+<pre><code>모델 seg_a_length = (사용자가 잰 안쪽 기준 길이) + lane_width</code></pre>
+<p>예) 큰 L: 5220 + 5450 = <strong>10670</strong>.<br>이 변환을 놓쳐서 초반에 모델을 여러 번 다시 만들었습니다.</p>
+<div class="tablewrap"><table><thead><tr><th>파트</th><th>사용자가 잰 값 (안쪽 기준)</th><th>통로 폭</th><th>→ 모델 seg_a / seg_b</th></tr></thead><tbody><tr><td><code>l_course_big</code></td><td>5220 / 5000</td><td>5450</td><td>10670 / 10450</td></tr><tr><td><code>l_course_small</code></td><td>1520 / 1520</td><td>2430</td><td>3950 / 3950</td></tr></tbody></table></div>
+<p>(<code>l_corridor_course</code> 와 그 스냅샷은 파이프라인 시험용이라 임의 숫자를 그대로 썼고 이 변환이 없습니다.)</p>
+<hr>
+<h2>7. 다 만든 뒤 확인하는 법</h2>
+<p><strong>자동 확인</strong> (<code>verify_ipt.ps1</code>): 파일 있음 · 확장자 <code>.ipt</code> · 크기 0 아님 · 다시 열림 ·<br>덩어리 1개 이상 · 고장난 도형 0개.</p>
+<p><strong>추가 확인</strong> (숫자만 봐서는 형상이 뭉개진 걸 못 잡기 때문에):</p>
+<ul><li><strong>가로·세로·높이</strong>(물체를 딱 감싸는 상자)가 <code>seg_b × seg_a × wall_height</code> 와 정확히 같은가.</li><li><strong>부피</strong>가 손계산과 같은가.</li></ul>
+<p>  손계산 = (바닥판 부피) + (바깥벽 부피) + (안쪽벽 부피) − (바닥과 벽이 아래에서 겹치는 부피).<br>  L자 모양 면적은 &quot;가로 사각형 + 세로 사각형 − 겹치는 정사각형&quot; 으로 구합니다.</p>
+<ul><li><strong>채움률</strong>(부피 ÷ 감싸는 상자 부피)이 한 자릿수~10%대인가. 속 빈 복도면 이 정도가 정상.</li></ul>
+<p>  상자로 뭉개졌으면 훨씬 큽니다.</p>
+<p>확인 결과 (전부 손계산과 세제곱밀리미터 단위까지 일치):</p>
+<div class="tablewrap"><table><thead><tr><th>파트</th><th>부피 (mm³)</th><th>채움률</th></tr></thead><tbody><tr><td><code>l_course_big</code></td><td>25,860,025,000</td><td>4.9 %</td></tr><tr><td><code>l_course_small</code></td><td>7,917,855,000</td><td>10.8 %</td></tr><tr><td><code>l_corridor_course</code></td><td>6,915,150,000</td><td>10.5 %</td></tr></tbody></table></div>
+<hr>
+<h2>8. 항상 같은 결과가 나오게 하는 규칙</h2>
+<ul><li>설계표 파일은 항목 순서·들여쓰기를 고정 → 같은 입력이면 글자 하나까지 똑같은 파일.</li><li>도형 순서는 &quot;무엇이 무엇에 의존하는가&quot;로 자동 정렬.</li><li>설계표 안에는 시간 기록을 넣지 않음 (시간은 보고서·로그에만).</li><li>값이 안 채워진 치수나 아직 지원 안 하는 도형 종류는 설계표 단계에서 거부.</li></ul>
+<hr>
+<h2>9. 이 모델에 없는 것</h2>
+<div class="tablewrap"><table><thead><tr><th>항목</th><th>이유</th></tr></thead><tbody><tr><td>벽 두께 정밀치</td><td>격실(칸막이) 구조라 정확히 못 잼 → 대충 정한 값 (100 mm 초기본 / 150 mm 큰·작은 L)</td></tr><tr><td>바닥판 두께</td><td>못 잼 → 시뮬용 값 50 mm</td></tr><tr><td>복도 끝 마감, 경사로, 모서리 둥글림</td><td>미포함 (양 끝 뚫린 상태)</td></tr><tr><td>패널 분할선, 초록 띠, 걸레받이, 밝은 코너 띠</td><td>표면 마감이라 미포함 (따로 도면이 있어야 추가 가능)</td></tr><tr><td>표면 무늬 · 물성</td><td>재질 이름표(<code>concrete</code>)만 달아둠</td></tr></tbody></table></div>
+<hr>
+<h2>10. 관련 파일</h2>
+<div class="tablewrap"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>인수인계</td><td><code>docs/l-courses/01-HANDOFF.md</code></td></tr><tr><td>파트 명세</td><td><code>docs/l-courses/03-SPECIFICATION.md</code></td></tr><tr><td>원문 (정확한 버전)</td><td><code>docs/l-courses/02-ENGINEERING.md</code></td></tr><tr><td>숫자 검사 스크립트</td><td><code>scripts/validate_measurements.py</code></td></tr><tr><td>설계표 만들기 스크립트</td><td><code>scripts/plan_cad.py</code></td></tr><tr><td>Inventor 조립 스크립트</td><td><code>scripts/inventor_build.ps1</code></td></tr><tr><td>결과 파일 확인 스크립트</td><td><code>scripts/verify_ipt.ps1</code></td></tr></tbody></table></div>
+<hr>
+<h2>부록 · 용어 미니 사전</h2>
+<p>문서와 파일에 계속 나오는 영어 단어들:</p>
+<div class="tablewrap"><table><thead><tr><th>단어</th><th>쉬운 뜻</th></tr></thead><tbody><tr><td><code>.ipt</code></td><td>Inventor 부품 파일 확장자</td></tr><tr><td>solid / body</td><td>속이 찬 3D 덩어리 하나</td></tr><tr><td>extrude (압출)</td><td>2D 도형을 위로 뽑아올려 3D로 만드는 것</td></tr><tr><td>sketch (스케치)</td><td>3D로 뽑기 전에 그리는 2D 도형</td></tr><tr><td>profile (프로파일)</td><td>스케치에서 실제로 뽑을 닫힌 면</td></tr><tr><td>COM</td><td>다른 프로그램이 Inventor를 조종하게 해 주는 윈도우 방식</td></tr><tr><td>STA / MTA</td><td>윈도우가 프로그램을 실행하는 두 가지 방식. Inventor 조종은 STA(옛 파워셸)에서만 안정적</td></tr><tr><td>sha256</td><td>파일 내용이 바뀌었는지 확인하는 &quot;지문&quot; 같은 값</td></tr><tr><td>bounding box</td><td>물체를 딱 감싸는 가장 작은 직육면체 (가로·세로·높이)</td></tr><tr><td>채움률 (fill ratio)</td><td>물체 부피 ÷ 감싸는 상자 부피. 낮을수록 속이 비었다는 뜻</td></tr><tr><td>결정론적 (deterministic)</td><td>같은 입력이면 항상 똑같은 결과가 나온다는 뜻</td></tr></tbody></table></div></div></body></html>
