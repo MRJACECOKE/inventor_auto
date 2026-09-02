@@ -31,6 +31,10 @@ def _copy_fixture(dst_part_dir):
 class ResolvePathsTests(unittest.TestCase):
     def test_input_convention(self):
         with tempfile.TemporaryDirectory() as d:
+            # resolve_paths() calls Path.resolve(); on Windows CI the temp dir is
+            # an 8.3 short path (RUNNER~1) that resolve() expands - normalise both
+            # sides so the comparison is about structure, not path spelling.
+            d = os.path.realpath(d)
             part = os.path.join(d, "input", "bracket_9")
             os.makedirs(part)
             paths = P.resolve_paths(part)
@@ -41,10 +45,11 @@ class ResolvePathsTests(unittest.TestCase):
             self.assertTrue(str(paths.ipt).endswith("bracket_9.ipt"))
 
     def test_out_dir_override_and_non_input_parent(self):
-        paths = P.resolve_paths(FIX, out_dir=os.path.join(tempfile.gettempdir(), "x"))
+        override = os.path.join(tempfile.gettempdir(), "x")
+        paths = P.resolve_paths(FIX, out_dir=override)
         self.assertEqual(paths.part_name, "simple_plate")
         self.assertTrue(paths.has_feature_intent())
-        self.assertEqual(str(paths.out_dir), os.path.abspath(os.path.join(tempfile.gettempdir(), "x")))
+        self.assertEqual(str(paths.out_dir), os.path.realpath(override))
 
 
 class ValidateTests(unittest.TestCase):
@@ -75,6 +80,10 @@ class ValidateTests(unittest.TestCase):
 class PlanParityTests(unittest.TestCase):
     def test_wrapper_plan_matches_cli_byte_for_byte(self):
         with tempfile.TemporaryDirectory() as d:
+            # normalise the 8.3 short temp path so the wrapper (which resolves it)
+            # and the CLI (invoked with a raw path) record the same
+            # provenance.measurement_file and produce byte-identical output.
+            d = os.path.realpath(d)
             part = os.path.join(d, "input", "simple_plate")
             _copy_fixture(part)
             meas = os.path.join(part, "measurement-input.json")

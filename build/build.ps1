@@ -142,7 +142,7 @@ Write-Host ("sha256 : {0}" -f $hash)
 Write-Host ("licences: {0}" -f $licDir)
 Write-Host ""
 Write-Host "Unsigned build - recipients unblock once:" -ForegroundColor Green
-Write-Host ("  Get-ChildItem -Recurse `"<extract path>`" | Unblock-File   (or SmartScreen: 추가 정보 -> 실행)")
+Write-Host ("  Get-ChildItem -Recurse `"<extract path>`" | Unblock-File   (or SmartScreen: More info -> Run anyway)")
 Write-Host "Quick check on this or any target PC:" -ForegroundColor Green
 Write-Host ("  `"{0}`" --selftest" -f $exe.FullName)
 Write-Host "Distribute the whole 'build\dist\Photo-to-IPT Builder\' folder (zip it) - includes 'READ ME FIRST.txt'." -ForegroundColor Green
